@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  uoc-database:
+    image: "postgres:${POSTGRES_VERSION:?err}"
+    container_name: "uoc-database-local"
+    restart: always
+    env_file:
+      - ./.uoc-database.env
+    volumes:
+      - ./initialize-uoc-database.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: pg_isready -d uoc-database -U admin
+    networks:
+      uocnetwork:
+        aliases:
+          - uoc-database
+
+  # uoc-backend:
+  #   container_name: "uoc-backend-local"
+  #   # TODO update command
+  #   # command: node dist/apps/XYZ/main
+  #   env_file:
+  #     - ./.uoc-backend.env
+  #   depends_on:
+  #     uoc-database:
+  #       condition: service_healthy
+  #   networks:
+  #     uocnetwork:
+  #       aliases:
+  #         - uoc-backend
+
+networks:
+  uocnetwork:

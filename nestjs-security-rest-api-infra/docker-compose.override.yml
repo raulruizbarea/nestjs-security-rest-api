@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  uoc-database:
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./uoc-database:/var/lib/postgresql/data
+
+  # uoc-backend:
+  #   build:
+  #     context: ./../nestjs-security-rest-api
+  #     dockerfile: Dockerfile.backend
+  #     args:
+  #       NODE_ALPINE_VERSION: ${NODE_ALPINE_VERSION:?err}
