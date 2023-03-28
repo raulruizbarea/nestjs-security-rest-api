@@ -1,0 +1,14 @@
+### List all subjects
+GET http://localhost:3000/subjects
+
+### Create a new subject
+POST http://localhost:3000/subjects
+Content-Type: application/json
+
+{
+  "name": "maths",
+  "code": "12345"
+}
+
+### Get a subject
+GET http://localhost:3000/subjects/123456
