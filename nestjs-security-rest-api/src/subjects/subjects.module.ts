@@ -1,5 +1,6 @@
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as ormconfig from './../ormconfig';
 
+import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { SubjectDao } from './infrastructure/type-orm/subject.dao';
 import { SubjectsController } from './subjects.controller';
@@ -12,7 +13,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       isGlobal: true,
       envFilePath: [`src/environments/.env.${process.env.NODE_ENV}`],
     }),
-    TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot({
+      ...ormconfig.default.options,
+      autoLoadEntities: true,
+      synchronize: false,
+    }),
     // TypeOrmModule.forRootAsync({
     //   inject: [ConfigService],
     //   useFactory: (config: ConfigService) => {
@@ -28,11 +33,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     //     };
     //   },
     // }),
-    // TypeOrmModule.forFeature([SubjectDao]),
+    TypeOrmModule.forFeature([SubjectDao]),
   ],
   controllers: [SubjectsController],
   providers: [SubjectsService],
 })
 export class SubjectsModule {
-  constructor(private configService: ConfigService) {}
+  constructor() {
+    console.log(`${process.env.DATABASE_USER}`);
+  }
 }
