@@ -16,30 +16,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     TypeOrmModule.forRoot({
       ...ormconfig.default.options,
       autoLoadEntities: true,
-      synchronize: false,
     }),
-    // TypeOrmModule.forRootAsync({
-    //   inject: [ConfigService],
-    //   useFactory: (config: ConfigService) => {
-    //     return {
-    //       type: 'postgres',
-    //       host: config.get<string>('DATABASE_HOST'),
-    //       port: config.get<number>('DATABASE_PORT'),
-    //       database: config.get<string>('DATABASE_DB'),
-    //       username: config.get<string>('DATABASE_USER'),
-    //       password: config.get<string>('DATABASE_PASSWORD'),
-    //       autoLoadEntities: true,
-    //       synchronize: true,
-    //     };
-    //   },
-    // }),
     TypeOrmModule.forFeature([SubjectDao]),
   ],
   controllers: [SubjectsController],
   providers: [SubjectsService],
 })
 export class SubjectsModule {
-  constructor() {
-    console.log(`${process.env.DATABASE_USER}`);
-  }
+  constructor() {}
 }
