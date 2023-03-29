@@ -19,4 +19,18 @@ const AppDataSource = new DataSource({
   synchronize: false,
 });
 
+switch (process.env.NODE_ENV) {
+  case 'development':
+    break;
+  case 'test':
+    Object.assign(AppDataSource.options, {
+      migrationsRun: true,
+    });
+    break;
+  case 'production':
+    break;
+  default:
+    throw new Error('unknown environment');
+}
+
 export default AppDataSource;
