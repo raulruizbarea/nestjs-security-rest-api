@@ -1,6 +1,12 @@
 version: "3.9"
+name: nestjs-security-rest-api-infra-development
 services:
   uoc-database:
+    container_name: "uoc-database-development"
+    env_file:
+      - ./environments/.uoc-database.development.env
+    healthcheck:
+      test: pg_isready -d uoc-database-development -U admin
     ports:
       - "5432:5432"
     volumes:

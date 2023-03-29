@@ -12,4 +12,7 @@ export class SubjectDao {
 
   @Column()
   name: string;
+
+  @Column()
+  surname: string;
 }

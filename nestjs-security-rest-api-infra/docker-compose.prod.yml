@@ -2,6 +2,10 @@ version: "3.9"
 services:
   uoc-database:
     container_name: "uoc-database"
+    env_file:
+      - ./environments/.uoc-database.env
+    healthcheck:
+      test: pg_isready -d uoc-database -U admin
     expose:
       - 5432
     volumes:
