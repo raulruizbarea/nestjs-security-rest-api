@@ -66,6 +66,9 @@ $ npm run typeorm migration:generate migrations/initial-schema -- -- -d ./src/or
 
 # run migration
 $ npm run typeorm migration:run -- -- -d ./src/ormconfig.ts
+
+# revert migration
+$ npm run typeorm migration:revert -- -- -d ./src/ormconfig.ts
 ```
 
 ## Support

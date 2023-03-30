@@ -15,7 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
     TypeOrmModule.forRoot({
       ...ormconfig.default.options,
-      autoLoadEntities: true,
+      autoLoadEntities: false,
     }),
     TypeOrmModule.forFeature([SubjectDao]),
   ],
