@@ -1,8 +1,8 @@
-import { Body, Post } from '@nestjs/common/decorators';
 import { Controller, HttpException, HttpStatus } from '@nestjs/common';
+import { Body, Post } from '@nestjs/common/decorators';
 import { CreateSubjectDto } from './dto/create-subject.dto';
-import { SubjectsService } from './subjects.service';
 import { Subject } from './entities/subject.entity';
+import { SubjectsService } from './subjects.service';
 
 @Controller('subjects')
 export class SubjectsController {

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { SubjectsRepository } from 'src/subjects/application/subjects.repository';
+import { Subject } from 'src/subjects/entities/subject.entity';
 import { Repository } from 'typeorm';
 import { SubjectDao } from './subject.dao';
-import { Subject } from 'src/subjects/entities/subject.entity';
-import { SubjectsRepository } from 'src/subjects/application/subjects.repository';
 
 @Injectable()
 export class SubjectTypeOrmRepository implements SubjectsRepository {

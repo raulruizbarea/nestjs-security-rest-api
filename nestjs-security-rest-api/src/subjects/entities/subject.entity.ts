@@ -1,7 +1,7 @@
 import * as uuid from 'uuidv6-extension';
 
-import { CreateSubjectDto } from '../dto/create-subject.dto';
 import { CreateSubjectResponseDto } from '../dto/create-subject-response.dto';
+import { CreateSubjectDto } from '../dto/create-subject.dto';
 
 export class Subject {
   //TODO: readonly y constructor? cuándo?

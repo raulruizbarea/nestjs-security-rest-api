@@ -1,13 +1,13 @@
 import * as ormconfig from './../ormconfig';
 
-import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
-import { SubjectDao } from './infrastructure/type-orm/subject.dao';
-import { SubjectTypeOrmRepository } from './infrastructure/type-orm/subject-typeorm.repository';
-import { SubjectsController } from './subjects.controller';
-import { SubjectsRepository } from './application/subjects.repository';
-import { SubjectsService } from './subjects.service';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SubjectsRepository } from './application/subjects.repository';
+import { SubjectTypeOrmRepository } from './infrastructure/type-orm/subject-typeorm.repository';
+import { SubjectDao } from './infrastructure/type-orm/subject.dao';
+import { SubjectsController } from './subjects.controller';
+import { SubjectsService } from './subjects.service';
 
 @Module({
   imports: [

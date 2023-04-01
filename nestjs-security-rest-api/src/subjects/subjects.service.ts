@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Subject } from './entities/subject.entity';
-import { CreateSubjectResponseDto } from './dto/create-subject-response.dto';
 import { SubjectsRepository } from './application/subjects.repository';
+import { CreateSubjectResponseDto } from './dto/create-subject-response.dto';
+import { Subject } from './entities/subject.entity';
 
 @Injectable()
 export class SubjectsService {
