@@ -3,7 +3,9 @@ import * as ormconfig from './../ormconfig';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { SubjectDao } from './infrastructure/type-orm/subject.dao';
+import { SubjectTypeOrmRepository } from './infrastructure/type-orm/subject-typeorm.repository';
 import { SubjectsController } from './subjects.controller';
+import { SubjectsRepository } from './application/subjects.repository';
 import { SubjectsService } from './subjects.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -20,7 +22,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     TypeOrmModule.forFeature([SubjectDao]),
   ],
   controllers: [SubjectsController],
-  providers: [SubjectsService],
+  providers: [
+    SubjectsService,
+    {
+      provide: SubjectsRepository,
+      useClass: SubjectTypeOrmRepository,
+    },
+  ],
 })
 export class SubjectsModule {
   constructor() {}
