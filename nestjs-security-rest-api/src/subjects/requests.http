@@ -1,8 +1,8 @@
 ### List all subjects
-GET http://localhost:3000/subjects
+GET http://localhost:3001/subjects
 
 ### Create a new subject
-POST http://localhost:3000/subjects
+POST http://localhost:3001/subjects
 Content-Type: application/json
 
 {
@@ -11,4 +11,4 @@ Content-Type: application/json
 }
 
 ### Get a subject
-GET http://localhost:3000/subjects/123456
+GET http://localhost:3001/subjects/123456

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SubjectsRepository } from 'src/subjects/application/subjects.repository';
-import { Subject } from 'src/subjects/entities/subject.entity';
 import { Repository } from 'typeorm';
+import { SubjectsRepository } from '../../application/subjects.repository';
+import { Subject } from '../../entities/subject.entity';
 import { SubjectDao } from './subject.dao';
 
 @Injectable()

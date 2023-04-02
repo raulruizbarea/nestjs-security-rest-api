@@ -1,4 +1,4 @@
-import { Subject } from 'src/subjects/entities/subject.entity';
+import { Subject } from '../entities/subject.entity';
 
 export interface SubjectsRepository {
   create(subject: Subject): Promise<Subject>;
