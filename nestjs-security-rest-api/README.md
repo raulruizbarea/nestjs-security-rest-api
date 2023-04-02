@@ -62,13 +62,13 @@ $ npm run test:cov
 
 ```bash
 # generate migration
-$ npm run typeorm migration:generate migrations/initial-schema -- -- -d ./src/ormconfig.ts -o
+$ npm run typeorm migration:generate migrations/initial-schema -- -d ./src/ormconfig.ts -o
 
 # run migration
-$ npm run typeorm migration:run -- -- -d ./src/ormconfig.ts
+$ npm run typeorm migration:run -- -d ./src/ormconfig.ts
 
 # revert migration
-$ npm run typeorm migration:revert -- -- -d ./src/ormconfig.ts
+$ npm run typeorm migration:revert -- -d ./src/ormconfig.ts
 ```
 
 ## Support
