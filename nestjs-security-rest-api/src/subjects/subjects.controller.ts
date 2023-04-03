@@ -8,7 +8,6 @@ import { SubjectsService } from './subjects.service';
 export class SubjectsController {
   constructor(private readonly subjectsService: SubjectsService) {}
 
-  //TODO: Why not async?
   @Post()
   create(@Body() body: CreateSubjectDto) {
     try {

@@ -12,9 +12,6 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       //* transform payload objects to dto
       transform: true,
-      //! PROD: Don't give hints about the errors
-      //TODO: Do we need this?
-      //disableErrorMessages: true
     }),
   );
   await app.listen(3001);
