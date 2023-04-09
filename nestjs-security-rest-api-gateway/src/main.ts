@@ -1,11 +1,17 @@
+import * as fs from 'fs';
+import * as yaml from 'yaml';
+
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { ApiGatewayModule } from './api-gateway.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(ApiGatewayModule);
+  const app = await NestFactory.create(ApiGatewayModule, {
+    logger: ['error', 'warn', 'debug', 'log'],
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -17,14 +23,27 @@ async function bootstrap() {
     }),
   );
 
+  //* API:  /api/v1
+  app.setGlobalPrefix('api');
+  app.enableVersioning({
+    type: VersioningType.URI,
+    //*  if you want to have a specific version set as the default version for every controller/route
+    defaultVersion: '1',
+  });
+
   const config = new DocumentBuilder()
     .setTitle('NestJS Security REST API')
     .setDescription('Open University of Catalonia')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
+  fs.writeFileSync('./open-api.yaml', yaml.stringify(document, {}));
+
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000);
+  const configService = app.get(ConfigService);
+  const port = configService.get('port');
+
+  await app.listen(port);
 }
 bootstrap();

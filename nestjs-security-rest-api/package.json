@@ -29,10 +29,11 @@
     "class-transformer": "0.5.1",
     "class-validator": "0.14.0",
     "cross-env": "7.0.3",
+    "joi": "^17.9.1",
     "pg": "8.10.0",
     "reflect-metadata": "0.1.13",
     "rxjs": "7.2.0",
-    "typeorm": "0.3.11",
+    "typeorm": "^0.3.14",
     "uuidv6-extension": "1.2.1"
   },
   "devDependencies": {
