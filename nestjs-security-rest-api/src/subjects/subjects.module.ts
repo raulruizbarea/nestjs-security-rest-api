@@ -4,7 +4,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from 'src/config/configuration';
-import { env_schema } from 'src/config/env.schema';
+import { envSchema } from 'src/config/env.schema';
 import { SubjectsRepository } from './application/subjects.repository';
 import { SubjectTypeOrmRepository } from './infrastructure/type-orm/subject-typeorm.repository';
 import { SubjectDao } from './infrastructure/type-orm/subject.dao';
@@ -17,7 +17,12 @@ import { SubjectsService } from './subjects.service';
       load: [configuration],
       isGlobal: true,
       envFilePath: [`src/environments/.env.${process.env.NODE_ENV}`],
-      validationSchema: env_schema,
+      validationSchema: envSchema,
+      validationOptions: {
+        abortEarly: false,
+        allowUnknown: true,
+        stripUnknown: true,
+      },
     }),
     TypeOrmModule.forRoot({
       ...ormconfig.default.options,

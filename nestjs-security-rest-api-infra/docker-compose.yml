@@ -1,8 +1,8 @@
-version: "3.9"
+version: '3.9'
 name: nestjs-security-rest-api-infra
 services:
   uoc-database:
-    image: "postgres:${POSTGRES_VERSION:?err}"
+    image: 'postgres:${POSTGRES_VERSION:?err}'
     restart: always
     volumes:
       - ./initialize-uoc-database.sql:/docker-entrypoint-initdb.d/init.sql
@@ -10,20 +10,15 @@ services:
       uocnetwork:
         aliases:
           - uoc-database
-
-  # uoc-backend:
-  #   container_name: "uoc-backend-local"
-  #   # TODO update command
-  #   # command: node dist/apps/XYZ/main
-  #   env_file:
-  #     - ./.uoc-backend.env
-  #   depends_on:
-  #     uoc-database:
-  #       condition: service_healthy
-  #   networks:
-  #     uocnetwork:
-  #       aliases:
-  #         - uoc-backend
+  uoc-api-gateway:
+    command: node dist/main
+    ports:
+      - '${API_GATEWAY_PORT:?err}:${API_GATEWAY_PORT:?err}'
+    restart: always
+    networks:
+      uocnetwork:
+        aliases:
+          - uoc-api-gateway
 
 networks:
   uocnetwork:

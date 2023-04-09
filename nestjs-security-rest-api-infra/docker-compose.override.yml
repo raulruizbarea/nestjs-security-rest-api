@@ -1,20 +1,25 @@
-version: "3.9"
+version: '3.9'
 name: nestjs-security-rest-api-infra-development
 services:
   uoc-database:
-    container_name: "uoc-database-development"
+    container_name: 'uoc-database-development'
     env_file:
       - ./environments/.uoc-database.development.env
     healthcheck:
       test: pg_isready -d uoc-database-development -U admin
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - ./uoc-database:/var/lib/postgresql/data
 
-  # uoc-backend:
-  #   build:
-  #     context: ./../nestjs-security-rest-api
-  #     dockerfile: Dockerfile.backend
-  #     args:
-  #       NODE_ALPINE_VERSION: ${NODE_ALPINE_VERSION:?err}
+  uoc-api-gateway:
+    container_name: 'uoc.api-gateway-development'
+    image: 'uoc-api-gateway-development'
+    env_file:
+      - ./environments/.uoc-api-gateway.development.env
+    build:
+      context: ./../nestjs-security-rest-api-gateway
+      dockerfile: Dockerfile
+      args:
+        NODE_ALPINE_VERSION: ${NODE_ALPINE_VERSION:?err}
+        PORT: ${API_GATEWAY_PORT:?err}
