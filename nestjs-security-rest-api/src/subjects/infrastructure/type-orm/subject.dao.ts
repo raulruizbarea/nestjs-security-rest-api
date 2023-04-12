@@ -2,10 +2,9 @@ import * as uuid from 'uuidv6-extension';
 
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
-import { Subject } from 'src/subjects/entities/subject.entity';
 import { DbTableNames } from './../../../core/constants/db-table-names';
+import { Subject } from 'src/subjects/entities/subject.entity';
 
-//TODO: Why extend entity?
 @Entity(DbTableNames.SUBJECT)
 export class SubjectDao extends Subject {
   @PrimaryColumn({ type: 'uuid', default: uuid.v6() })

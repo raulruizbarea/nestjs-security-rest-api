@@ -23,9 +23,6 @@ WORKDIR /home/node/nestjs-security-rest-api-gateway
 
 RUN chown node:node /home/node/nestjs-security-rest-api-gateway
 
-RUN apk add --no-cache tzdata
-ENV TZ=Europe/Madrid
-
 USER node
 
 COPY --from=builder --chown=node:node /usr/src/nestjs-security-rest-api-gateway/package*.json /home/node/nestjs-security-rest-api-gateway/

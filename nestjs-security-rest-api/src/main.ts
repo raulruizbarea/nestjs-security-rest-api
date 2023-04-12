@@ -1,12 +1,17 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import helmet from 'helmet';
+import { Logger } from 'nestjs-pino';
 import { SubjectsModule } from './subjects/subjects.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(SubjectsModule, {
-    logger: ['error', 'warn', 'debug', 'log'],
-  });
+  const app = await NestFactory.create(SubjectsModule, { bufferLogs: true });
+
+  app.useLogger(app.get(Logger));
+
+  app.use(helmet());
+
   // whitelist: true => avoid other properties than the DTO expected
   app.useGlobalPipes(
     new ValidationPipe({
