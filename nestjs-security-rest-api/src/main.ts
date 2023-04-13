@@ -1,7 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import helmet from 'helmet';
 import { Logger } from 'nestjs-pino';
 import { SubjectsModule } from './subjects/subjects.module';
 
@@ -10,9 +9,6 @@ async function bootstrap() {
 
   app.useLogger(app.get(Logger));
 
-  app.use(helmet());
-
-  // whitelist: true => avoid other properties than the DTO expected
   app.useGlobalPipes(
     new ValidationPipe({
       //* properties that don't use any validator decorator automatically removed and throw an exception
