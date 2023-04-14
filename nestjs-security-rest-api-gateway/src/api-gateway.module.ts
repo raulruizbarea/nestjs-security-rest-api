@@ -1,7 +1,7 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { Module } from '@nestjs/common';
-import { ClientsModule } from '@nestjs/microservices';
 import { LoggerModule } from 'nestjs-pino';
 import { ApiGatewayController } from './api-gateway.controller';
 import { ApiGatewayService } from './api-gateway.service';
@@ -23,7 +23,7 @@ import { envSchema } from './config/env.schema';
               ? {
                   target: 'pino-pretty',
                   options: {
-                    singleLine: true,
+                    //singleLine: true,
                   },
                 }
               : undefined,
@@ -43,15 +43,17 @@ import { envSchema } from './config/env.schema';
         stripUnknown: true,
       },
     }),
-    ClientsModule.register([
+    ClientsModule.registerAsync([
       {
         name: 'UniversityService',
-        //transport: Transport.TCP,
-        //TODO: config environments
-        options: {
-          host: 'localhost',
-          port: 3001,
-        },
+        inject: [ConfigService],
+        useFactory: async (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: configService.get('university.host'),
+            port: configService.get('university.port'),
+          },
+        }),
       },
     ]),
   ],
