@@ -1,8 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class ApiGatewayService {
-  getHello(): string {
-    return 'Hello World!';
+  constructor(
+    @Inject('UniversityService')
+    private readonly clientUniversityService: ClientProxy,
+  ) {}
+
+  getHello(): Observable<string> {
+    const pattern = 'getHello';
+    return this.clientUniversityService.send<string>(pattern, {});
   }
 }

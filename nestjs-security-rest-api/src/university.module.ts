@@ -1,12 +1,15 @@
+import * as ormconfig from './ormconfig';
+
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { Module } from '@nestjs/common';
-import { ClientsModule } from '@nestjs/microservices';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerModule } from 'nestjs-pino';
-import { ApiGatewayController } from './api-gateway.controller';
-import { ApiGatewayService } from './api-gateway.service';
 import configuration from './config/configuration';
 import { envSchema } from './config/env.schema';
+import { SubjectsModule } from './subjects/subjects.module';
+import { UniversityController } from './university.controller';
+import { UniversityService } from './university.service';
 
 @Module({
   imports: [
@@ -23,7 +26,7 @@ import { envSchema } from './config/env.schema';
               ? {
                   target: 'pino-pretty',
                   options: {
-                    singleLine: true,
+                    //singleLine: true,
                   },
                 }
               : undefined,
@@ -34,7 +37,6 @@ import { envSchema } from './config/env.schema';
     ConfigModule.forRoot({
       load: [configuration],
       isGlobal: true,
-      //* ignoreEnvFile: true,
       envFilePath: [`src/environments/.env.${process.env.NODE_ENV}`],
       validationSchema: envSchema,
       validationOptions: {
@@ -43,19 +45,13 @@ import { envSchema } from './config/env.schema';
         stripUnknown: true,
       },
     }),
-    ClientsModule.register([
-      {
-        name: 'UniversityService',
-        //transport: Transport.TCP,
-        //TODO: config environments
-        options: {
-          host: 'localhost',
-          port: 3001,
-        },
-      },
-    ]),
+    TypeOrmModule.forRoot({
+      ...ormconfig.default.options,
+      autoLoadEntities: false,
+    }),
+    SubjectsModule,
   ],
-  controllers: [ApiGatewayController],
-  providers: [ApiGatewayService],
+  providers: [UniversityService],
+  controllers: [UniversityController],
 })
-export class ApiGatewayModule {}
+export class UniversityModule {}

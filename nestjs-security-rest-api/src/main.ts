@@ -1,11 +1,15 @@
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { Logger } from 'nestjs-pino';
-import { SubjectsModule } from './subjects/subjects.module';
+import { UniversityModule } from './university.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(SubjectsModule, { bufferLogs: true });
+  const app = await NestFactory.create(UniversityModule, {
+    bufferLogs: true,
+  });
 
   app.useLogger(app.get(Logger));
 
@@ -21,6 +25,15 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   const port = configService.get('port');
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.TCP,
+    options: {
+      port: port,
+    },
+  });
+
+  await app.startAllMicroservices();
 
   await app.listen(port);
 }

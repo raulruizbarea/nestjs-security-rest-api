@@ -1,5 +1,5 @@
 ### List all subjects
-GET http://localhost:3001/subjects
+GET http://localhost:3001/
 
 ### Create a new subject
 POST http://localhost:3001/subjects

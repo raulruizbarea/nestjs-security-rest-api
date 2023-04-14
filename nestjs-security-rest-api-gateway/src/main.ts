@@ -17,6 +17,8 @@ async function bootstrap() {
 
   app.use(helmet());
 
+  app.enableCors();
+
   app.useGlobalPipes(
     new ValidationPipe({
       //* properties that don't use any validator decorator automatically removed and throw an exception
