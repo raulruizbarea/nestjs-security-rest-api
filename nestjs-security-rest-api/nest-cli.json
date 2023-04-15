@@ -1,22 +1,22 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "apps/nestjs-security-rest-api/src",
+  "sourceRoot": "apps/api-gateway/src",
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
-    "tsConfigPath": "apps/nestjs-security-rest-api/tsconfig.app.json"
+    "tsConfigPath": "apps/api-gateway/tsconfig.app.json"
   },
   "monorepo": true,
-  "root": "apps/nestjs-security-rest-api",
+  "root": "apps/api-gateway",
   "projects": {
-    "nestjs-security-rest-api": {
+    "university-service": {
       "type": "application",
-      "root": "apps/nestjs-security-rest-api",
+      "root": "apps/university-service",
       "entryFile": "main",
-      "sourceRoot": "apps/nestjs-security-rest-api/src",
+      "sourceRoot": "apps/university-service/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/nestjs-security-rest-api/tsconfig.app.json"
+        "tsConfigPath": "apps/university-service/tsconfig.app.json"
       }
     },
     "api-gateway": {

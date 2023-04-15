@@ -2,8 +2,8 @@ import * as uuid from 'uuidv6-extension';
 
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
+import { DbTableNames } from '../../../core/constants/db-table-names';
 import { Subject } from '../../entities/subject.entity';
-import { DbTableNames } from './../../../core/constants/db-table-names';
 
 @Entity(DbTableNames.SUBJECT)
 export class SubjectDao extends Subject {

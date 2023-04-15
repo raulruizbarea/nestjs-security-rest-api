@@ -38,7 +38,7 @@ import { UniversityService } from './university.service';
       load: [configuration],
       isGlobal: true,
       envFilePath: [
-        `apps/nestjs-security-rest-api/src/environments/.env.${process.env.NODE_ENV}`,
+        `apps/university-service/src/environments/.env.${process.env.NODE_ENV}`,
       ],
       validationSchema: envSchema,
       validationOptions: {
