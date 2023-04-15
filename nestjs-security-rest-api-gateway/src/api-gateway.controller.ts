@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 
-import { ApiGatewayService } from './api-gateway.service';
 import { Observable } from 'rxjs';
+import { ApiGatewayService } from './api-gateway.service';
 
 @Controller()
 export class ApiGatewayController {

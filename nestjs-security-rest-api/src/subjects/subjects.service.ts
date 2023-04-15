@@ -10,6 +10,10 @@ export class SubjectsService {
     private readonly subjectsRepository: SubjectsRepository,
   ) {}
 
+  getHello(): string {
+    return 'Hello World from Subjects!';
+  }
+
   async create(subject: Subject): Promise<CreateSubjectResponseDto> {
     // hooks are executed -> validation for createdSubject
     return Subject.toDto(await this.subjectsRepository.create(subject));

@@ -7,7 +7,7 @@ export class UniversityController {
   constructor(private readonly universityService: UniversityService) {}
 
   @MessagePattern('getHello')
-  getHello(): Promise<string> {
+  getHello(): string {
     return this.universityService.getHello();
   }
 }

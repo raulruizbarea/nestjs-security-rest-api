@@ -1,5 +1,5 @@
 import { Controller, HttpException, HttpStatus } from '@nestjs/common';
-import { Body, Post } from '@nestjs/common/decorators';
+import { Body, Get, Post } from '@nestjs/common/decorators';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { Subject } from './entities/subject.entity';
 import { SubjectsService } from './subjects.service';
@@ -8,6 +8,10 @@ import { SubjectsService } from './subjects.service';
 export class SubjectsController {
   constructor(private readonly subjectsService: SubjectsService) {}
 
+  @Get()
+  getHello(): string {
+    return this.subjectsService.getHello();
+  }
   @Post()
   create(@Body() body: CreateSubjectDto) {
     try {
