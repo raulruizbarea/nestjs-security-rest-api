@@ -2,6 +2,7 @@ import * as ormconfig from './ormconfig';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
+import { SharedModule } from '@app/shared';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerModule } from 'nestjs-pino';
@@ -52,6 +53,7 @@ import { UniversityService } from './university.service';
       autoLoadEntities: false,
     }),
     SubjectsModule,
+    SharedModule,
   ],
   providers: [UniversityService],
   controllers: [UniversityController],

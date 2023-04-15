@@ -1,3 +1,4 @@
+import { SubjectMessagePatternsName } from '@app/shared/subjects/constants/subject-message-patterns-name';
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { UniversityService } from './university.service';
@@ -6,7 +7,7 @@ import { UniversityService } from './university.service';
 export class UniversityController {
   constructor(private readonly universityService: UniversityService) {}
 
-  @MessagePattern('getHello')
+  @MessagePattern(SubjectMessagePatternsName.HELLO)
   getHello(): string {
     return this.universityService.getHello();
   }

@@ -1,6 +1,8 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
+import { SharedModule } from '@app/shared';
+import { ClientServices } from '@app/shared/core/constants/client-services';
 import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
 import { ApiGatewayController } from './api-gateway.controller';
@@ -47,7 +49,7 @@ import { envSchema } from './config/env.schema';
     }),
     ClientsModule.registerAsync([
       {
-        name: 'UniversityService',
+        name: ClientServices.UNIVERSITY_SERVICE,
         inject: [ConfigService],
         useFactory: async (configService: ConfigService) => ({
           transport: Transport.TCP,
@@ -58,6 +60,7 @@ import { envSchema } from './config/env.schema';
         }),
       },
     ]),
+    SharedModule,
   ],
   controllers: [ApiGatewayController],
   providers: [ApiGatewayService],

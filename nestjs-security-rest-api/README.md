@@ -62,7 +62,7 @@ $ npm run test:cov
 
 ```bash
 # generate migration
-$ npm run typeorm migration:generate migrations/initial-schema -- -d ./src/ormconfig.ts -o
+$ npm run typeorm migration:generate migrations/initial-schema -- -d ./apps/university-service/src/ormconfig.ts -o
 
 # run migration
 $ npm run typeorm migration:run -- -d ./src/ormconfig.ts
