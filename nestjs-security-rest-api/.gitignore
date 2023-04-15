@@ -1,5 +1,3 @@
-/src/environments/*
-
 # compiled output
 /dist
 /node_modules

@@ -1,14 +1,14 @@
 import * as fs from 'fs';
 import * as yaml from 'yaml';
 
-import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 
+import { ApiGatewayModule } from './api-gateway.module';
 import { ConfigService } from '@nestjs/config';
+import { Logger } from 'nestjs-pino';
 import { NestFactory } from '@nestjs/core';
 import helmet from 'helmet';
-import { Logger } from 'nestjs-pino';
-import { ApiGatewayModule } from './api-gateway.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(ApiGatewayModule, { bufferLogs: true });

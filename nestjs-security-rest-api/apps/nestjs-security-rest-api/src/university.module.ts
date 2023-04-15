@@ -1,12 +1,15 @@
+import * as ormconfig from './ormconfig';
+
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerModule } from 'nestjs-pino';
-import { ApiGatewayController } from './api-gateway.controller';
-import { ApiGatewayService } from './api-gateway.service';
 import configuration from './config/configuration';
 import { envSchema } from './config/env.schema';
+import { SubjectsModule } from './subjects/subjects.module';
+import { UniversityController } from './university.controller';
+import { UniversityService } from './university.service';
 
 @Module({
   imports: [
@@ -34,8 +37,9 @@ import { envSchema } from './config/env.schema';
     ConfigModule.forRoot({
       load: [configuration],
       isGlobal: true,
-      //* ignoreEnvFile: true,
-      envFilePath: [`src/environments/.env.${process.env.NODE_ENV}`],
+      envFilePath: [
+        `apps/nestjs-security-rest-api/src/environments/.env.${process.env.NODE_ENV}`,
+      ],
       validationSchema: envSchema,
       validationOptions: {
         abortEarly: true,
@@ -43,21 +47,13 @@ import { envSchema } from './config/env.schema';
         stripUnknown: true,
       },
     }),
-    ClientsModule.registerAsync([
-      {
-        name: 'UniversityService',
-        inject: [ConfigService],
-        useFactory: async (configService: ConfigService) => ({
-          transport: Transport.TCP,
-          options: {
-            host: configService.get('university.host'),
-            port: configService.get('university.port'),
-          },
-        }),
-      },
-    ]),
+    TypeOrmModule.forRoot({
+      ...ormconfig.default.options,
+      autoLoadEntities: false,
+    }),
+    SubjectsModule,
   ],
-  controllers: [ApiGatewayController],
-  providers: [ApiGatewayService],
+  providers: [UniversityService],
+  controllers: [UniversityController],
 })
-export class ApiGatewayModule {}
+export class UniversityModule {}

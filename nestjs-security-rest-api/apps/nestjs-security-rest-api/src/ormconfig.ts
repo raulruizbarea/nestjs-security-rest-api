@@ -2,7 +2,7 @@ import { DataSource } from 'typeorm';
 import { SubjectDao } from './subjects/infrastructure/type-orm/subject.dao';
 
 require('dotenv').config({
-  path: `./src/environments/.env.${process.env.NODE_ENV}`,
+  path: `./apps/nestjs-security-rest-api/src/environments/.env.${process.env.NODE_ENV}`,
 });
 
 const AppDataSource = new DataSource({

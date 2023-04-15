@@ -1,15 +1,12 @@
-import * as ormconfig from './ormconfig';
-
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerModule } from 'nestjs-pino';
+import { ApiGatewayController } from './api-gateway.controller';
+import { ApiGatewayService } from './api-gateway.service';
 import configuration from './config/configuration';
 import { envSchema } from './config/env.schema';
-import { SubjectsModule } from './subjects/subjects.module';
-import { UniversityController } from './university.controller';
-import { UniversityService } from './university.service';
 
 @Module({
   imports: [
@@ -37,7 +34,10 @@ import { UniversityService } from './university.service';
     ConfigModule.forRoot({
       load: [configuration],
       isGlobal: true,
-      envFilePath: [`src/environments/.env.${process.env.NODE_ENV}`],
+      //* ignoreEnvFile: true,
+      envFilePath: [
+        `apps/api-gateway/src/environments/.env.${process.env.NODE_ENV}`,
+      ],
       validationSchema: envSchema,
       validationOptions: {
         abortEarly: true,
@@ -45,13 +45,21 @@ import { UniversityService } from './university.service';
         stripUnknown: true,
       },
     }),
-    TypeOrmModule.forRoot({
-      ...ormconfig.default.options,
-      autoLoadEntities: false,
-    }),
-    SubjectsModule,
+    ClientsModule.registerAsync([
+      {
+        name: 'UniversityService',
+        inject: [ConfigService],
+        useFactory: async (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: configService.get('university.host'),
+            port: configService.get('university.port'),
+          },
+        }),
+      },
+    ]),
   ],
-  providers: [UniversityService],
-  controllers: [UniversityController],
+  controllers: [ApiGatewayController],
+  providers: [ApiGatewayService],
 })
-export class UniversityModule {}
+export class ApiGatewayModule {}

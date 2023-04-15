@@ -1,0 +1,18 @@
+openapi: 3.0.0
+paths:
+  /api/v1:
+    get:
+      operationId: ApiGatewayController_getHello
+      parameters: []
+      responses:
+        "200":
+          description: ""
+info:
+  title: NestJS Security REST API
+  description: Open University of Catalonia
+  version: "1.0"
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas: {}
