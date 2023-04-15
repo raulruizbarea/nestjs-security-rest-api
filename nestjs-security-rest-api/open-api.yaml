@@ -7,12 +7,25 @@ paths:
       responses:
         "200":
           description: ""
+      tags:
+        - Root
 info:
   title: NestJS Security REST API
   description: Open University of Catalonia
   version: "1.0"
   contact: {}
 tags: []
-servers: []
+servers:
+  - url: http://localhost:3000
+    description: null
+    variables: null
 components:
+  securitySchemes:
+    bearer:
+      scheme: Bearer
+      bearerFormat: JWT
+      type: http
+      name: JWT
+      description: Enter JWT token
+      in: header
   schemas: {}

@@ -1,17 +1,18 @@
 import * as fs from 'fs';
 import * as yaml from 'yaml';
 
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import { ApiGatewayModule } from './api-gateway.module';
 import { ConfigService } from '@nestjs/config';
-import { Logger } from 'nestjs-pino';
 import { NestFactory } from '@nestjs/core';
 import helmet from 'helmet';
+import { Logger } from 'nestjs-pino';
+import { ApiGatewayModule } from './api-gateway.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(ApiGatewayModule, { bufferLogs: true });
+  const configService = app.get(ConfigService);
 
   app.useLogger(app.get(Logger));
 
@@ -37,18 +38,29 @@ async function bootstrap() {
     defaultVersion: '1',
   });
 
-  const config = new DocumentBuilder()
+  const schema = configService.get('schema');
+  const host = configService.get('host');
+  const port = configService.get('port');
+
+  const options = new DocumentBuilder()
     .setTitle('NestJS Security REST API')
     .setDescription('Open University of Catalonia')
     .setVersion('1.0')
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'Bearer',
+      bearerFormat: 'JWT',
+      name: 'JWT',
+      description: 'Enter JWT token',
+      in: 'header',
+    })
+    .addServer(`${schema}://${host}:${port}`)
     .build();
-  const document = SwaggerModule.createDocument(app, config);
+
+  const document = SwaggerModule.createDocument(app, options);
   fs.writeFileSync('./open-api.yaml', yaml.stringify(document, {}));
 
   SwaggerModule.setup('api', app, document);
-
-  const configService = app.get(ConfigService);
-  const port = configService.get('port');
 
   await app.listen(port);
 }
