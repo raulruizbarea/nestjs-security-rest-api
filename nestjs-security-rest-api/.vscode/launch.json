@@ -1,0 +1,44 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug university-service",
+      "args": ["${workspaceFolder}/apps/university-service/src/main.ts"],
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "ts-node/register",
+        "-r",
+        "tsconfig-paths/register"
+      ],
+      "sourceMaps": true,
+      "envFile": "${workspaceFolder}/apps/university-service/src/environments/.env.development",
+      "cwd": "${workspaceRoot}",
+      "console": "integratedTerminal",
+      "trace": false
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug api-gateway",
+      "args": ["${workspaceFolder}/apps/api-gateway/src/main.ts"],
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "ts-node/register",
+        "-r",
+        "tsconfig-paths/register"
+      ],
+      "sourceMaps": true,
+      "envFile": "${workspaceFolder}/apps/api-gateway/src/environments/.env.development",
+      "cwd": "${workspaceRoot}",
+      "console": "integratedTerminal",
+      "trace": false
+    }
+  ]
+}

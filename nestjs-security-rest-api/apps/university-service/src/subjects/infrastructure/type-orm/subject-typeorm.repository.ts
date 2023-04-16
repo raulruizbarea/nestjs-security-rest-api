@@ -12,9 +12,10 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
     private readonly subjectRepository: Repository<SubjectDao>,
   ) {}
 
-  async create(subject: Subject): Promise<Subject> {
-    const createdSubject = await this.subjectRepository.create(subject);
-
-    return this.subjectRepository.save(createdSubject);
+  async create(subject: Subject): Promise<string> {
+    const createdSubject: SubjectDao = await this.subjectRepository.create(
+      subject,
+    );
+    return (await this.subjectRepository.save(createdSubject)).id;
   }
 }

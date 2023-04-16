@@ -1,7 +1,7 @@
 import { Subject } from '../entities/subject.entity';
 
 export interface SubjectsRepository {
-  create(subject: Subject): Promise<Subject>;
+  create(subject: Subject): Promise<string>;
 }
 
 export const SubjectsRepository = Symbol('SubjectsRepository');

@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SubjectsRepository } from './application/subjects.repository';
-import { CreateSubjectResponseDto } from './dto/create-subject-response.dto';
 import { Subject } from './entities/subject.entity';
 
 @Injectable()
@@ -14,8 +13,7 @@ export class SubjectsService {
     return 'Hello World from Subjects!';
   }
 
-  async create(subject: Subject): Promise<CreateSubjectResponseDto> {
-    // hooks are executed -> validation for createdSubject
-    return Subject.toDto(await this.subjectsRepository.create(subject));
+  async create(subject: Subject): Promise<string> {
+    return await this.subjectsRepository.create(subject);
   }
 }

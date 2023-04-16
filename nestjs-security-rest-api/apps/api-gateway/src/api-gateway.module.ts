@@ -1,15 +1,17 @@
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { SharedModule } from '@app/shared';
 import { ClientServices } from '@app/shared/core/constants/client-services';
-import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
 import { ApiGatewayController } from './api-gateway.controller';
 import { ApiGatewayService } from './api-gateway.service';
 import configuration from './config/configuration';
 import { envSchema } from './config/env.schema';
+import { SubjectsModule } from './subjects/subjects.module';
 
+@Global()
 @Module({
   imports: [
     LoggerModule.forRootAsync({
@@ -61,8 +63,10 @@ import { envSchema } from './config/env.schema';
       },
     ]),
     SharedModule,
+    SubjectsModule,
   ],
   controllers: [ApiGatewayController],
   providers: [ApiGatewayService],
+  exports: [ClientsModule],
 })
 export class ApiGatewayModule {}

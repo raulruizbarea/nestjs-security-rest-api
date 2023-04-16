@@ -1,5 +1,7 @@
 import { DataSource } from 'typeorm';
 import { SubjectDao } from './subjects/infrastructure/type-orm/subject.dao';
+import { SubjectTeacherDao } from './subjects/infrastructure/type-orm/subjectteacher.dao';
+import { TeacherDao } from './teachers/infrastructure/type-orm/teacher.dao';
 
 require('dotenv').config({
   path: `./apps/university-service/src/environments/.env.${process.env.NODE_ENV}`,
@@ -12,11 +14,11 @@ const AppDataSource = new DataSource({
   database: process.env.DATABASE_DB,
   username: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
-  entities: [SubjectDao],
+  entities: [SubjectDao, TeacherDao, SubjectTeacherDao],
   migrations: ['./migrations/*{.ts,.js}'],
   migrationsTableName: 'migrations',
   logging: true,
-  synchronize: false,
+  synchronize: true,
 });
 
 switch (process.env.NODE_ENV) {

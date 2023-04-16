@@ -1,14 +1,20 @@
 openapi: 3.0.0
 paths:
-  /api/v1:
-    get:
-      operationId: ApiGatewayController_getHello
+  /api/v1/subjects:
+    post:
+      operationId: SubjectsController_create
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSubjectDto"
       responses:
-        "200":
+        "201":
           description: ""
       tags:
-        - Root
+        - Subjects
 info:
   title: NestJS Security REST API
   description: Open University of Catalonia
@@ -28,4 +34,27 @@ components:
       name: JWT
       description: Enter JWT token
       in: header
-  schemas: {}
+  schemas:
+    CreateSubjectDto:
+      type: object
+      properties:
+        academicalYear:
+          type: string
+        code:
+          type: number
+        lang:
+          type: string
+          enum:
+            - CAS
+            - CAT
+            - ANG
+        name:
+          type: string
+        description:
+          type: string
+      required:
+        - academicalYear
+        - code
+        - lang
+        - name
+        - description

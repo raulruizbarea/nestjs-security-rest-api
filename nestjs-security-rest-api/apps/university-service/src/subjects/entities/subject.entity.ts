@@ -1,32 +1,33 @@
-import { CreateSubjectResponseDto } from '../dto/create-subject-response.dto';
-import { CreateSubjectDto } from '../dto/create-subject.dto';
+import { Languages } from '@app/shared/core/types/languages';
+import { CreateSubjectResponseDto } from '@app/shared/subjects/dto/create-subject-response.dto';
+import { CreateSubjectDto } from '@app/shared/subjects/dto/create-subject.dto';
 
 export class Subject {
-  readonly code: string;
-  readonly name: string;
+  readonly id?: string;
+  readonly createdDate?: Date;
+  updatedDate?: Date;
 
-  //TODO: implement constructor
-  constructor() {}
+  constructor(
+    readonly academicalYear: string,
+    readonly code: number,
+    readonly lang: Languages,
+    readonly name: string,
+    readonly description: string,
+  ) {}
 
-  static fromDto(subjectDto: CreateSubjectDto): Subject {
-    //TODO: call constructor
-    const subject = new Subject();
-
-    // if (subjectDto instanceof CreateSubjectDto) {
-    //   subject.id = uuid.v6();
-    // }
-    //TODO: refactor
-    //subject.code = subjectDto.code;
-    //subject.name = subjectDto.name;
+  static fromDto(createSubjectDto: CreateSubjectDto): Subject {
+    const subject = new Subject(
+      createSubjectDto.academicalYear,
+      createSubjectDto.code,
+      createSubjectDto.lang,
+      createSubjectDto.name,
+      createSubjectDto.description,
+    );
 
     return subject;
   }
 
-  static toDto(subject: Subject): CreateSubjectResponseDto {
-    const createSubjectResponseDto = new CreateSubjectResponseDto();
-
-    //createSubjectResponseDto.id = subject.id;
-
-    return createSubjectResponseDto;
+  static toCreateSubjectResponseDto(id: string): CreateSubjectResponseDto {
+    return new CreateSubjectResponseDto(id);
   }
 }

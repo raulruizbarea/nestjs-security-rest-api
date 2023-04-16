@@ -9,6 +9,7 @@ import { LoggerModule } from 'nestjs-pino';
 import configuration from './config/configuration';
 import { envSchema } from './config/env.schema';
 import { SubjectsModule } from './subjects/subjects.module';
+import { TeachersModule } from './teachers/teachers.module';
 import { UniversityController } from './university.controller';
 import { UniversityService } from './university.service';
 
@@ -50,10 +51,11 @@ import { UniversityService } from './university.service';
     }),
     TypeOrmModule.forRoot({
       ...ormconfig.default.options,
-      autoLoadEntities: false,
+      autoLoadEntities: true,
     }),
     SubjectsModule,
     SharedModule,
+    TeachersModule,
   ],
   providers: [UniversityService],
   controllers: [UniversityController],

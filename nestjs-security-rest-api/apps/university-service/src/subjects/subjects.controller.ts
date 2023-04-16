@@ -1,6 +1,9 @@
-import { Controller, HttpException, HttpStatus } from '@nestjs/common';
-import { Body, Get, Post } from '@nestjs/common/decorators';
-import { CreateSubjectDto } from './dto/create-subject.dto';
+import { SubjectMessagePatternsName } from '@app/shared/subjects/constants/subject-message-patterns-name';
+import { CreateSubjectResponseDto } from '@app/shared/subjects/dto/create-subject-response.dto';
+import { CreateSubjectDto } from '@app/shared/subjects/dto/create-subject.dto';
+import { Controller } from '@nestjs/common';
+import { Get } from '@nestjs/common/decorators';
+import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 import { Subject } from './entities/subject.entity';
 import { SubjectsService } from './subjects.service';
 
@@ -12,15 +15,19 @@ export class SubjectsController {
   getHello(): string {
     return this.subjectsService.getHello();
   }
-  @Post()
-  create(@Body() body: CreateSubjectDto) {
+
+  @MessagePattern(SubjectMessagePatternsName.CREATE)
+  async create(
+    @Payload() payload: CreateSubjectDto,
+  ): Promise<CreateSubjectResponseDto> {
     try {
-      return this.subjectsService.create(Subject.fromDto(body));
-    } catch (error) {
-      throw new HttpException(
-        'Internal Server Error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      const id: string = await this.subjectsService.create(
+        Subject.fromDto(payload),
       );
+
+      return new CreateSubjectResponseDto(id);
+    } catch (error) {
+      throw new RpcException(error);
     }
   }
 }
