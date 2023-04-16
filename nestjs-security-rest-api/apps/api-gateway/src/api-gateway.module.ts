@@ -10,6 +10,7 @@ import { ApiGatewayService } from './api-gateway.service';
 import configuration from './config/configuration';
 import { envSchema } from './config/env.schema';
 import { SubjectsModule } from './subjects/subjects.module';
+import { HealthModule } from './health/health.module';
 
 @Global()
 @Module({
@@ -64,6 +65,7 @@ import { SubjectsModule } from './subjects/subjects.module';
     ]),
     SharedModule,
     SubjectsModule,
+    HealthModule,
   ],
   controllers: [ApiGatewayController],
   providers: [ApiGatewayService],
