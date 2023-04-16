@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerModule } from 'nestjs-pino';
 import configuration from './config/configuration';
 import { envSchema } from './config/env.schema';
+import { HealthModule } from './health/health.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { TeachersModule } from './teachers/teachers.module';
 import { UniversityController } from './university.controller';
@@ -56,6 +57,7 @@ import { UniversityService } from './university.service';
     SubjectsModule,
     SharedModule,
     TeachersModule,
+    HealthModule,
   ],
   providers: [UniversityService],
   controllers: [UniversityController],

@@ -9,8 +9,8 @@ import { ApiGatewayController } from './api-gateway.controller';
 import { ApiGatewayService } from './api-gateway.service';
 import configuration from './config/configuration';
 import { envSchema } from './config/env.schema';
-import { SubjectsModule } from './subjects/subjects.module';
 import { HealthModule } from './health/health.module';
+import { SubjectsModule } from './subjects/subjects.module';
 
 @Global()
 @Module({

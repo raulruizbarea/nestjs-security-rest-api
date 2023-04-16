@@ -115,7 +115,16 @@ paths:
                       additionalProperties:
                         type: string
       tags:
+        &a4
         - Health
+  /api/v1/health/university-service:
+    get:
+      operationId: HealthController_checkUniversityService
+      parameters: []
+      responses:
+        "200":
+          description: ""
+      tags: *a4
 info:
   title: NestJS Security REST API
   description: Open University of Catalonia

@@ -1,37 +1,42 @@
 import { Controller, Get } from '@nestjs/common';
 import {
+  DiskHealthIndicator,
   HealthCheck,
+  HealthCheckResult,
   HealthCheckService,
-  HttpHealthIndicator,
+  MemoryHealthIndicator,
   MicroserviceHealthIndicator,
-  TypeOrmHealthIndicator,
 } from '@nestjs/terminus';
 
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
 import { ApiTags } from '@nestjs/swagger';
+import { Observable } from 'rxjs';
 import { Tags } from '../core/constants/swagger/tags';
+import { HealthService } from './health.service';
 
 @ApiTags(Tags.HEALTH)
 @Controller('health')
 export class HealthController {
   constructor(
-    private health: HealthCheckService,
-    private db: TypeOrmHealthIndicator,
-    private http: HttpHealthIndicator,
-    private microservice: MicroserviceHealthIndicator,
-    private configService: ConfigService,
+    private readonly health: HealthCheckService,
+    private readonly microservice: MicroserviceHealthIndicator,
+    private readonly disk: DiskHealthIndicator,
+    private readonly memory: MemoryHealthIndicator,
+    private readonly configService: ConfigService,
+    private readonly healthService: HealthService,
   ) {}
 
   @Get()
   @HealthCheck()
   check() {
     return this.health.check([
-      //() => this.http.pingCheck('api-gateway', 'http://localhost:3000'),
-      // () =>
-      //   this.db.pingCheck('database', {
-      //     connection: this.universityServiceConnection,
-      //   }),
+      () =>
+        this.disk.checkStorage('storage', {
+          path: 'C:\\',
+          thresholdPercent: 0.8,
+        }),
+      () => this.memory.checkHeap('memory_heap', 150 * 1024 * 1024),
       () =>
         this.microservice.pingCheck('university-service', {
           transport: Transport.TCP,
@@ -41,5 +46,10 @@ export class HealthController {
           },
         }),
     ]);
+  }
+
+  @Get('university-service')
+  checkUniversityService(): Observable<HealthCheckResult> {
+    return this.healthService.check();
   }
 }
