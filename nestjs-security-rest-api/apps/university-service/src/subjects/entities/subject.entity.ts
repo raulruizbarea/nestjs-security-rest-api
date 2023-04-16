@@ -1,6 +1,8 @@
 import { Languages } from '@app/shared/core/types/languages';
 import { CreateSubjectResponseDto } from '@app/shared/subjects/dto/create-subject-response.dto';
 import { CreateSubjectDto } from '@app/shared/subjects/dto/create-subject.dto';
+import { SubjectResponseDto } from '@app/shared/subjects/dto/subject-response.dto';
+import { SubjectDao } from '../infrastructure/type-orm/subject.dao';
 
 export class Subject {
   readonly id?: string;
@@ -15,6 +17,18 @@ export class Subject {
     readonly description: string,
   ) {}
 
+  static fromDao(subjectDao: SubjectDao): Subject {
+    const subject = new Subject(
+      subjectDao.academicalYear,
+      subjectDao.code,
+      subjectDao.lang,
+      subjectDao.name,
+      subjectDao.description,
+    );
+
+    return subject;
+  }
+
   static fromDto(createSubjectDto: CreateSubjectDto): Subject {
     const subject = new Subject(
       createSubjectDto.academicalYear,
@@ -25,6 +39,17 @@ export class Subject {
     );
 
     return subject;
+  }
+
+  static toDto(subject: Subject): SubjectResponseDto {
+    const subjectResponseDto: SubjectResponseDto = new SubjectResponseDto();
+    subjectResponseDto.academicalYear = subject.academicalYear;
+    subjectResponseDto.code = subject.code;
+    subjectResponseDto.lang = subject.lang;
+    subjectResponseDto.name = subject.name;
+    subjectResponseDto.description = subject.description;
+
+    return subjectResponseDto;
   }
 
   static toCreateSubjectResponseDto(id: string): CreateSubjectResponseDto {

@@ -9,11 +9,15 @@ export class SubjectsService {
     private readonly subjectsRepository: SubjectsRepository,
   ) {}
 
-  getHello(): string {
-    return 'Hello World from Subjects!';
-  }
-
   async create(subject: Subject): Promise<string> {
     return await this.subjectsRepository.create(subject);
+  }
+
+  async findOne(id: string): Promise<Subject> {
+    return await this.subjectsRepository.findOne(id);
+  }
+
+  async findAll(): Promise<Subject[]> {
+    return await this.subjectsRepository.findAll();
   }
 }

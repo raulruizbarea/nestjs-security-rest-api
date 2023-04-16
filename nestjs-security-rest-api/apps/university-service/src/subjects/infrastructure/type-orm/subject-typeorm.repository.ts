@@ -18,4 +18,20 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
     );
     return (await this.subjectRepository.save(createdSubject)).id;
   }
+
+  async findOne(id: string): Promise<Subject> {
+    const subjectDao: SubjectDao = await this.subjectRepository.findOneBy({
+      id: id,
+    });
+    return Subject.fromDao(subjectDao);
+  }
+
+  async findAll(): Promise<Subject[]> {
+    const subjectsDao: SubjectDao[] = await this.subjectRepository.find();
+
+    const subjects: Subject[] = subjectsDao.map((subjectDao) => {
+      return Subject.fromDao(subjectDao);
+    });
+    return subjects;
+  }
 }

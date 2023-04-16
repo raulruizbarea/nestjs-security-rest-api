@@ -3,6 +3,8 @@ paths:
   /api/v1/subjects:
     post:
       operationId: SubjectsController_create
+      summary: Create a new subject
+      description: Create a new subject
       parameters: []
       requestBody:
         required: true
@@ -12,12 +14,89 @@ paths:
               $ref: "#/components/schemas/CreateSubjectDto"
       responses:
         "201":
-          description: ""
+          description: The subject has been successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateSubjectResponseDto"
+        "500":
+          description: Internal Server Error.
       tags:
+        &a1
         - Subjects
+    get:
+      operationId: SubjectsController_findAll
+      summary: Find all subjects
+      description: Find all subjects
+      parameters: []
+      responses:
+        "200":
+          description: The subject has been found.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubjectResponseDto"
+      tags: *a1
+  "/api/v1/subjects/{id}":
+    get:
+      operationId: SubjectsController_findOne
+      summary: Find a subject by id
+      description: Find a subject by id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The subject has been found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubjectResponseDto"
+      tags: *a1
+    patch:
+      operationId: SubjectsController_update
+      summary: Update a subject by id
+      description: Update a subject by id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSubjectDto"
+      responses:
+        "200":
+          description: ""
+      tags: *a1
+    delete:
+      operationId: SubjectsController_remove
+      summary: Delete a subject by id
+      description: Delete a subject by id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+      tags: *a1
   /api/v1/health:
     get:
       operationId: HealthController_check
+      summary: Get the health of the system
+      description: Get the health of the system
       parameters: []
       responses:
         "200":
@@ -33,9 +112,9 @@ paths:
                   info:
                     type: object
                     example:
-                      &a1
+                      &a2
                       database:
-                        &a2
+                        &a3
                         status: up
                     additionalProperties:
                       type: object
@@ -58,7 +137,7 @@ paths:
                     nullable: true
                   details:
                     type: object
-                    example: *a1
+                    example: *a2
                     additionalProperties:
                       type: object
                       properties:
@@ -78,7 +157,7 @@ paths:
                     example: error
                   info:
                     type: object
-                    example: *a1
+                    example: *a2
                     additionalProperties:
                       type: object
                       properties:
@@ -91,7 +170,7 @@ paths:
                     type: object
                     example:
                       redis:
-                        &a3
+                        &a4
                         status: down
                         message: Could not connect
                     additionalProperties:
@@ -105,8 +184,8 @@ paths:
                   details:
                     type: object
                     example:
-                      database: *a2
-                      redis: *a3
+                      database: *a3
+                      redis: *a4
                     additionalProperties:
                       type: object
                       properties:
@@ -115,16 +194,110 @@ paths:
                       additionalProperties:
                         type: string
       tags:
-        &a4
+        &a8
         - Health
   /api/v1/health/university-service:
     get:
       operationId: HealthController_checkUniversityService
+      summary: Get the health of university service database
+      description: Get the health of university service database
       parameters: []
       responses:
         "200":
-          description: ""
-      tags: *a4
+          description: The Health Check is successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  info:
+                    type: object
+                    example:
+                      &a5
+                      database:
+                        &a6
+                        status: up
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      additionalProperties:
+                        type: string
+                    nullable: true
+                  error:
+                    type: object
+                    example: {}
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      additionalProperties:
+                        type: string
+                    nullable: true
+                  details:
+                    type: object
+                    example: *a5
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      additionalProperties:
+                        type: string
+        "503":
+          description: The Health Check is not successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  info:
+                    type: object
+                    example: *a5
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      additionalProperties:
+                        type: string
+                    nullable: true
+                  error:
+                    type: object
+                    example:
+                      redis:
+                        &a7
+                        status: down
+                        message: Could not connect
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      additionalProperties:
+                        type: string
+                    nullable: true
+                  details:
+                    type: object
+                    example:
+                      database: *a6
+                      redis: *a7
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      additionalProperties:
+                        type: string
+      tags: *a8
 info:
   title: NestJS Security REST API
   description: Open University of Catalonia
@@ -155,6 +328,7 @@ components:
         lang:
           type: string
           enum:
+            &a9
             - CAS
             - CAT
             - ANG
@@ -168,3 +342,44 @@ components:
         - lang
         - name
         - description
+    CreateSubjectResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+        - id
+    SubjectResponseDto:
+      type: object
+      properties:
+        academicalYear:
+          type: string
+        code:
+          type: number
+        lang:
+          type: string
+          enum: *a9
+        name:
+          type: string
+        description:
+          type: string
+      required:
+        - academicalYear
+        - code
+        - lang
+        - name
+        - description
+    UpdateSubjectDto:
+      type: object
+      properties:
+        academicalYear:
+          type: string
+        code:
+          type: number
+        lang:
+          type: string
+          enum: *a9
+        name:
+          type: string
+        description:
+          type: string
