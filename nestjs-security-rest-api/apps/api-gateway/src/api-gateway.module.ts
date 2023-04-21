@@ -4,11 +4,14 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { SharedModule } from '@app/shared';
 import { ClientServices } from '@app/shared/core/constants/client-services';
+import { APP_FILTER } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
 import { ApiGatewayController } from './api-gateway.controller';
 import { ApiGatewayService } from './api-gateway.service';
 import configuration from './config/configuration';
 import { envSchema } from './config/env.schema';
+import { HttpExceptionFilter } from './core/filters/http-exception.filter';
+import { RcpExceptionFilter } from './core/filters/rpc-exception.filter';
 import { HealthModule } from './health/health.module';
 import { SubjectsModule } from './subjects/subjects.module';
 
@@ -68,7 +71,17 @@ import { SubjectsModule } from './subjects/subjects.module';
     HealthModule,
   ],
   controllers: [ApiGatewayController],
-  providers: [ApiGatewayService],
+  providers: [
+    ApiGatewayService,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: RcpExceptionFilter,
+    },
+  ],
   exports: [ClientsModule],
 })
 export class ApiGatewayModule {}

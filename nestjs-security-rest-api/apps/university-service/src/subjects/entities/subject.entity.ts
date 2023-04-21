@@ -5,13 +5,12 @@ import { SubjectResponseDto } from '@app/shared/subjects/dto/subject-response.dt
 import { SubjectDao } from '../infrastructure/type-orm/subject.dao';
 
 export class Subject {
-  readonly id?: string;
   readonly createdDate?: Date;
-  updatedDate?: Date;
+  readonly updatedDate?: Date;
 
   constructor(
     readonly academicalYear: string,
-    readonly code: number,
+    readonly code: string,
     readonly lang: Languages,
     readonly name: string,
     readonly description: string,
@@ -52,7 +51,7 @@ export class Subject {
     return subjectResponseDto;
   }
 
-  static toCreateSubjectResponseDto(id: string): CreateSubjectResponseDto {
-    return new CreateSubjectResponseDto(id);
+  static toCreateSubjectResponseDto(code: string): CreateSubjectResponseDto {
+    return new CreateSubjectResponseDto(code);
   }
 }

@@ -22,7 +22,7 @@ export class SubjectDao extends Subject {
   academicalYear: string;
 
   @Column({ unique: true })
-  code: number;
+  code: string;
 
   @Column({ type: 'enum', enum: Languages })
   lang: Languages;

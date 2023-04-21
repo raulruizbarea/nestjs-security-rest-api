@@ -1,0 +1,45 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug university-service",
+      "args": [
+        "${workspaceFolder}/nestjs-security-rest-api/apps/university-service/src/main.ts"
+      ],
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "ts-node/register",
+        "-r",
+        "tsconfig-paths/register"
+      ],
+      "sourceMaps": true,
+      "envFile": "${workspaceFolder}/nestjs-security-rest-api/apps/university-service/src/environments/.env.development",
+      "cwd": "${workspaceRoot}/nestjs-security-rest-api",
+      "console": "integratedTerminal",
+      "trace": false
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug api-gateway",
+      "args": [
+        "${workspaceFolder}/nestjs-security-rest-api/apps/api-gateway/src/main.ts"
+      ],
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "ts-node/register",
+        "-r",
+        "tsconfig-paths/register"
+      ],
+      "sourceMaps": true,
+      "envFile": "${workspaceFolder}/nestjs-security-rest-api/apps/api-gateway/src/environments/.env.development",
+      "cwd": "${workspaceRoot}/nestjs-security-rest-api",
+      "console": "integratedTerminal",
+      "trace": false
+    }
+  ]
+}

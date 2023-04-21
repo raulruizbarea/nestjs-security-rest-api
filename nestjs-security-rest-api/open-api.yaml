@@ -324,7 +324,7 @@ components:
         academicalYear:
           type: string
         code:
-          type: number
+          type: string
         lang:
           type: string
           enum:
@@ -345,17 +345,17 @@ components:
     CreateSubjectResponseDto:
       type: object
       properties:
-        id:
+        code:
           type: string
       required:
-        - id
+        - code
     SubjectResponseDto:
       type: object
       properties:
         academicalYear:
           type: string
         code:
-          type: number
+          type: string
         lang:
           type: string
           enum: *a9
@@ -375,7 +375,7 @@ components:
         academicalYear:
           type: string
         code:
-          type: number
+          type: string
         lang:
           type: string
           enum: *a9

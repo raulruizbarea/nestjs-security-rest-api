@@ -2,7 +2,7 @@ import { Subject } from '../entities/subject.entity';
 
 export interface SubjectsRepository {
   create(subject: Subject): Promise<string>;
-  findOne(id: string): Promise<Subject>;
+  findOne(code: string): Promise<Subject>;
   findAll(): Promise<Subject[]>;
 }
 

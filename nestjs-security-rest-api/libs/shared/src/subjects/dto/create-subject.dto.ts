@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 import { Languages } from '@app/shared/core/types/languages';
 import { ApiProperty } from '@nestjs/swagger';
@@ -10,9 +10,9 @@ export class CreateSubjectDto {
   academicalYear: string;
 
   @ApiProperty()
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  code: number;
+  code: string;
 
   @ApiProperty({
     enum: Languages,

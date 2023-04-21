@@ -6,9 +6,9 @@ export class CreateSubjectResponseDto {
   @ApiProperty()
   @IsUUID()
   @IsNotEmpty()
-  readonly id: string;
+  readonly code: string;
 
-  constructor(id: string) {
-    this.id = id;
+  constructor(code: string) {
+    this.code = code;
   }
 }

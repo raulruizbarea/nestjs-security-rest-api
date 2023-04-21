@@ -15,15 +15,11 @@ export class SubjectsController {
   async create(
     @Payload() payload: CreateSubjectDto,
   ): Promise<CreateSubjectResponseDto> {
-    try {
-      const id: string = await this.subjectsService.create(
-        Subject.fromDto(payload),
-      );
+    const id: string = await this.subjectsService.create(
+      Subject.fromDto(payload),
+    );
 
-      return new CreateSubjectResponseDto(id);
-    } catch (error) {
-      throw new RpcException(error);
-    }
+    return new CreateSubjectResponseDto(id);
   }
 
   @MessagePattern(SubjectMessagePatternsName.FIND_ONE)

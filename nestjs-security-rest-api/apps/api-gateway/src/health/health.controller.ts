@@ -41,6 +41,7 @@ export class HealthController {
           thresholdPercent: 0.8,
         }),
       () => this.memory.checkHeap('memory_heap', 150 * 1024 * 1024),
+      () => this.memory.checkRSS('memory_rss', 150 * 1024 * 1024),
       () =>
         this.microservice.pingCheck('university-service', {
           transport: Transport.TCP,
