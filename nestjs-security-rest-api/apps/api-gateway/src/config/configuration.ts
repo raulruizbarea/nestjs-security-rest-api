@@ -1,5 +1,6 @@
 export default () => ({
   environment: process.env.NODE_ENV,
+  name: process.env.APP_NAME,
   schema: process.env.API_GATEWAY_SCHEMA,
   host: process.env.API_GATEWAY_HOST,
   port: parseInt(process.env.API_GATEWAY_PORT),
