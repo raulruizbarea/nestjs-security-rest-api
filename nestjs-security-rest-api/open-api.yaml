@@ -39,13 +39,13 @@ paths:
                 items:
                   $ref: "#/components/schemas/SubjectResponseDto"
       tags: *a1
-  "/api/v1/subjects/{id}":
+  "/api/v1/subjects/{code}":
     get:
       operationId: SubjectsController_findOne
-      summary: Find a subject by id
-      description: Find a subject by id
+      summary: Find a subject by code
+      description: Find a subject by code
       parameters:
-        - name: id
+        - name: code
           required: true
           in: path
           schema:
@@ -60,10 +60,10 @@ paths:
       tags: *a1
     patch:
       operationId: SubjectsController_update
-      summary: Update a subject by id
-      description: Update a subject by id
+      summary: Update a subject by code
+      description: Update a subject by code
       parameters:
-        - name: id
+        - name: code
           required: true
           in: path
           schema:
@@ -80,10 +80,10 @@ paths:
       tags: *a1
     delete:
       operationId: SubjectsController_remove
-      summary: Delete a subject by id
-      description: Delete a subject by id
+      summary: Delete a subject by code
+      description: Delete a subject by code
       parameters:
-        - name: id
+        - name: code
           required: true
           in: path
           schema:

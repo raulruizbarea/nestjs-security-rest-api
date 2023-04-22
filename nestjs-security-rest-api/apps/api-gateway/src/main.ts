@@ -46,14 +46,17 @@ async function bootstrap() {
     .setTitle('NestJS Security REST API')
     .setDescription('Open University of Catalonia')
     .setVersion('1.0')
-    .addBearerAuth({
-      type: 'http',
-      scheme: 'Bearer',
-      bearerFormat: 'JWT',
-      name: 'JWT',
-      description: 'Enter JWT token',
-      in: 'header',
-    })
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'Bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'access_token',
+    )
     .addServer(`${schema}://${host}:${port}`)
     .build();
 

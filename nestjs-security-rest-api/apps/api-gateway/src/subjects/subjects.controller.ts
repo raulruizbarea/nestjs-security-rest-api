@@ -14,6 +14,7 @@ import {
   Post,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
@@ -22,12 +23,12 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { isUUID } from 'class-validator';
 import { Observable } from 'rxjs';
 import { Tags } from '../core/constants/swagger/tags';
 import { SubjectsService } from './subjects.service';
 
 @ApiTags(Tags.SUBJECTS)
+@ApiBearerAuth('access-token')
 @Controller('subjects')
 export class SubjectsController {
   constructor(private readonly subjectsService: SubjectsService) {}
@@ -62,24 +63,20 @@ export class SubjectsController {
   }
 
   @ApiOperation({
-    summary: 'Find a subject by id',
-    description: 'Find a subject by id',
+    summary: 'Find a subject by code',
+    description: 'Find a subject by code',
   })
   @ApiParam({
-    name: 'id',
+    name: 'code',
     required: true,
   })
   @ApiOkResponse({
     description: 'The subject has been found.',
     type: SubjectResponseDto,
   })
-  @Get(':id')
-  findOne(@Param('id') id: string): Observable<SubjectResponseDto> {
-    if (!isUUID(id)) {
-      throw new HttpException('Id must be UUID', HttpStatus.BAD_REQUEST);
-    }
-
-    return this.subjectsService.findOne(id);
+  @Get(':code')
+  findOne(@Param('code') code: string): Observable<SubjectResponseDto> {
+    return this.subjectsService.findOne(code);
   }
 
   @ApiOperation({
@@ -97,23 +94,23 @@ export class SubjectsController {
   }
 
   @ApiOperation({
-    summary: 'Update a subject by id',
-    description: 'Update a subject by id',
+    summary: 'Update a subject by code',
+    description: 'Update a subject by code',
   })
-  @Patch(':id')
+  @Patch(':code')
   update(
-    @Param('id') id: string,
+    @Param('code') code: string,
     @Body() updateSubjectDto: UpdateSubjectDto,
   ): void {
-    return this.subjectsService.update(id, updateSubjectDto);
+    return this.subjectsService.update(code, updateSubjectDto);
   }
 
   @ApiOperation({
-    summary: 'Delete a subject by id',
-    description: 'Delete a subject by id',
+    summary: 'Delete a subject by code',
+    description: 'Delete a subject by code',
   })
-  @Delete(':id')
-  remove(@Param('id') id: string): void {
-    return this.subjectsService.remove(id);
+  @Delete(':code')
+  remove(@Param('code') code: string): void {
+    return this.subjectsService.remove(code);
   }
 }
