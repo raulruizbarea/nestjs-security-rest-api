@@ -1,11 +1,10 @@
 import * as ormconfig from './ormconfig';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 
 import { SharedModule } from '@app/shared';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LoggerModule } from 'nestjs-pino';
 import configuration from './config/configuration';
 import { envSchema } from './config/env.schema';
 import { HealthModule } from './health/health.module';
@@ -16,27 +15,6 @@ import { UniversityService } from './university.service';
 
 @Module({
   imports: [
-    LoggerModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        pinoHttp: {
-          level:
-            configService.get('environment') !== 'production'
-              ? 'debug'
-              : 'info',
-          transport:
-            configService.get('environment') !== 'production'
-              ? {
-                  target: 'pino-pretty',
-                  options: {
-                    //singleLine: true,
-                  },
-                }
-              : undefined,
-        },
-      }),
-      inject: [ConfigService],
-    }),
     ConfigModule.forRoot({
       load: [configuration],
       isGlobal: true,
