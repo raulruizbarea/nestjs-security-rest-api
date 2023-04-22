@@ -25,10 +25,14 @@ export class RcpExceptionFilter implements ExceptionFilter {
     });
   }
 
-  _getError(exception: any): { statusCode: HttpStatus; message: string } {
+  _getError(exception: any): {
+    statusCode: HttpStatus;
+    message: string | string[];
+  } {
     return {
       statusCode: exception?.statusCode ?? HttpStatus.BAD_REQUEST,
-      message: exception?.message,
+      //TODO: share everything that has an error or just global one? e.g. description should be a string
+      message: exception?.response?.message ?? exception?.message,
     };
   }
 }

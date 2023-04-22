@@ -7,14 +7,11 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import helmet from 'helmet';
-import { Logger } from 'nestjs-pino';
 import { ApiGatewayModule } from './api-gateway.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(ApiGatewayModule, { bufferLogs: true });
   const configService = app.get(ConfigService);
-
-  app.useLogger(app.get(Logger));
 
   app.use(helmet());
 

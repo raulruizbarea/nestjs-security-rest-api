@@ -24,6 +24,9 @@ paths:
       tags:
         &a1
         - Subjects
+      security:
+        &a2
+        - access-token: []
     get:
       operationId: SubjectsController_findAll
       summary: Find all subjects
@@ -39,6 +42,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/SubjectResponseDto"
       tags: *a1
+      security: *a2
   "/api/v1/subjects/{code}":
     get:
       operationId: SubjectsController_findOne
@@ -58,6 +62,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/SubjectResponseDto"
       tags: *a1
+      security: *a2
     patch:
       operationId: SubjectsController_update
       summary: Update a subject by code
@@ -78,6 +83,7 @@ paths:
         "200":
           description: ""
       tags: *a1
+      security: *a2
     delete:
       operationId: SubjectsController_remove
       summary: Delete a subject by code
@@ -92,6 +98,7 @@ paths:
         "200":
           description: ""
       tags: *a1
+      security: *a2
   /api/v1/health:
     get:
       operationId: HealthController_check
@@ -112,9 +119,9 @@ paths:
                   info:
                     type: object
                     example:
-                      &a2
+                      &a3
                       database:
-                        &a3
+                        &a4
                         status: up
                     additionalProperties:
                       type: object
@@ -137,7 +144,7 @@ paths:
                     nullable: true
                   details:
                     type: object
-                    example: *a2
+                    example: *a3
                     additionalProperties:
                       type: object
                       properties:
@@ -157,7 +164,7 @@ paths:
                     example: error
                   info:
                     type: object
-                    example: *a2
+                    example: *a3
                     additionalProperties:
                       type: object
                       properties:
@@ -170,7 +177,7 @@ paths:
                     type: object
                     example:
                       redis:
-                        &a4
+                        &a5
                         status: down
                         message: Could not connect
                     additionalProperties:
@@ -184,8 +191,8 @@ paths:
                   details:
                     type: object
                     example:
-                      database: *a3
-                      redis: *a4
+                      database: *a4
+                      redis: *a5
                     additionalProperties:
                       type: object
                       properties:
@@ -194,7 +201,7 @@ paths:
                       additionalProperties:
                         type: string
       tags:
-        &a8
+        &a9
         - Health
   /api/v1/health/university-service:
     get:
@@ -216,9 +223,9 @@ paths:
                   info:
                     type: object
                     example:
-                      &a5
+                      &a6
                       database:
-                        &a6
+                        &a7
                         status: up
                     additionalProperties:
                       type: object
@@ -241,7 +248,7 @@ paths:
                     nullable: true
                   details:
                     type: object
-                    example: *a5
+                    example: *a6
                     additionalProperties:
                       type: object
                       properties:
@@ -261,7 +268,7 @@ paths:
                     example: error
                   info:
                     type: object
-                    example: *a5
+                    example: *a6
                     additionalProperties:
                       type: object
                       properties:
@@ -274,7 +281,7 @@ paths:
                     type: object
                     example:
                       redis:
-                        &a7
+                        &a8
                         status: down
                         message: Could not connect
                     additionalProperties:
@@ -288,8 +295,8 @@ paths:
                   details:
                     type: object
                     example:
-                      database: *a6
-                      redis: *a7
+                      database: *a7
+                      redis: *a8
                     additionalProperties:
                       type: object
                       properties:
@@ -297,7 +304,7 @@ paths:
                           type: string
                       additionalProperties:
                         type: string
-      tags: *a8
+      tags: *a9
 info:
   title: NestJS Security REST API
   description: Open University of Catalonia
@@ -310,7 +317,7 @@ servers:
     variables: null
 components:
   securitySchemes:
-    bearer:
+    access_token:
       scheme: Bearer
       bearerFormat: JWT
       type: http
@@ -328,7 +335,7 @@ components:
         lang:
           type: string
           enum:
-            &a9
+            &a10
             - CAS
             - CAT
             - ANG
@@ -358,7 +365,7 @@ components:
           type: string
         lang:
           type: string
-          enum: *a9
+          enum: *a10
         name:
           type: string
         description:
@@ -378,7 +385,7 @@ components:
           type: string
         lang:
           type: string
-          enum: *a9
+          enum: *a10
         name:
           type: string
         description:

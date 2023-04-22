@@ -18,11 +18,11 @@ export class SubjectDao extends Subject {
   @PrimaryColumn({ type: 'uuid', generated: 'uuid' })
   id: string;
 
-  @Column()
-  academicalYear: string;
-
   @Column({ unique: true })
   code: string;
+
+  @Column()
+  academicalYear: string;
 
   @Column({ type: 'enum', enum: Languages })
   lang: Languages;

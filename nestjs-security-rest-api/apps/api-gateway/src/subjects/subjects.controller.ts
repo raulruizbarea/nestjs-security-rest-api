@@ -23,6 +23,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { Sanitizer, sanitize } from 'class-sanitizer';
 import { Observable } from 'rxjs';
 import { Tags } from '../core/constants/swagger/tags';
 import { SubjectsService } from './subjects.service';
@@ -53,6 +54,8 @@ export class SubjectsController {
     @Body() createSubjectDto: CreateSubjectDto,
   ): Observable<CreateSubjectResponseDto> {
     try {
+      sanitize(createSubjectDto);
+
       return this.subjectsService.create(createSubjectDto);
     } catch (error) {
       throw new HttpException(
@@ -76,6 +79,8 @@ export class SubjectsController {
   })
   @Get(':code')
   findOne(@Param('code') code: string): Observable<SubjectResponseDto> {
+    code = Sanitizer.escape(code).trim();
+
     return this.subjectsService.findOne(code);
   }
 
@@ -102,6 +107,9 @@ export class SubjectsController {
     @Param('code') code: string,
     @Body() updateSubjectDto: UpdateSubjectDto,
   ): void {
+    code = Sanitizer.escape(code).trim();
+    sanitize(updateSubjectDto);
+
     return this.subjectsService.update(code, updateSubjectDto);
   }
 
@@ -111,6 +119,8 @@ export class SubjectsController {
   })
   @Delete(':code')
   remove(@Param('code') code: string): void {
+    code = Sanitizer.escape(code).trim();
+
     return this.subjectsService.remove(code);
   }
 }

@@ -3,15 +3,12 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { Logger } from 'nestjs-pino';
 import { UniversityModule } from './university.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(UniversityModule, {
     bufferLogs: true,
   });
-
-  app.useLogger(app.get(Logger));
 
   app.useGlobalPipes(
     new ValidationPipe({

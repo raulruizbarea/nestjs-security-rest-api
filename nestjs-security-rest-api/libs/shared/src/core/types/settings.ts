@@ -1,0 +1,7 @@
+export const SubjectSettings = {
+  CODE_LENGTH: 6,
+  ACADEMICALYEAR_LENGTH: 5,
+  LANGUAGES_LENGTH: 3,
+  NAME_LENGTH: 60,
+  DESCRIPTION_LENGTH: 900,
+};
