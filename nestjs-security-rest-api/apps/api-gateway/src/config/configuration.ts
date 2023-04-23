@@ -8,4 +8,7 @@ export default () => ({
     host: process.env.UNIVERSITY_SERVICE_HOST,
     port: parseInt(process.env.UNIVERSITY_SERVICE_PORT),
   },
+  sentry: {
+    dsn: process.env.SENTRY_DSN,
+  },
 });

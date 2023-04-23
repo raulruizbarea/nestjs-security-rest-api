@@ -9,7 +9,7 @@ const ecsFormat = require('@elastic/ecs-winston-format');
 const consoleFormat = winston.format.combine(
   winston.format.timestamp(),
   winston.format.ms(),
-  nestWinstonModuleUtilities.format.nestLike('MyApp', {
+  nestWinstonModuleUtilities.format.nestLike('Winston', {
     colors: true,
     prettyPrint: true,
   }),

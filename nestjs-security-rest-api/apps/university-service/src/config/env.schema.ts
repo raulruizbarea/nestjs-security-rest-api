@@ -9,4 +9,5 @@ export const envSchema = Joi.object({
   DATABASE_DB: Joi.string().required(),
   DATABASE_USER: Joi.string().required(),
   DATABASE_PASSWORD: Joi.string().required(),
+  SENTRY_DSN: Joi.string().required(),
 });

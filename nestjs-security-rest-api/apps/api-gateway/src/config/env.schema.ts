@@ -8,4 +8,5 @@ export const envSchema = Joi.object({
   API_GATEWAY_PORT: Joi.number().required(),
   UNIVERSITY_SERVICE_HOST: Joi.string().required(),
   UNIVERSITY_SERVICE_PORT: Joi.number().required(),
+  SENTRY_DSN: Joi.string().required(),
 });
