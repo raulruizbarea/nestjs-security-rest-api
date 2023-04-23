@@ -3,12 +3,20 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
+  Inject,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
+  constructor(
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+  ) {}
+
   catch(exception: HttpException, host: ArgumentsHost) {
+    const timestamp = new Date().toISOString();
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
@@ -17,9 +25,21 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     response.status(status).json({
       statusCode: status,
-      timestamp: new Date().toISOString(),
+      timestamp: timestamp,
       path: request.url,
       info: msg,
     });
+
+    if (status >= 500) {
+      this.logger.error({
+        message: msg,
+        stack: exception.stack,
+        extra: {
+          path: request.url,
+          statusCode: status,
+          timestamp: timestamp,
+        },
+      });
+    }
   }
 }

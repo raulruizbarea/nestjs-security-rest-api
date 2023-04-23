@@ -23,12 +23,15 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get('port');
 
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.TCP,
-    options: {
-      port: port,
+  app.connectMicroservice<MicroserviceOptions>(
+    {
+      transport: Transport.TCP,
+      options: {
+        port: port,
+      },
     },
-  });
+    { inheritAppConfig: true },
+  );
 
   await app.startAllMicroservices();
 
