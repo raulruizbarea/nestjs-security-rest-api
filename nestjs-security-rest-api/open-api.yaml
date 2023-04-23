@@ -362,10 +362,10 @@ components:
     CreateSubjectResponseDto:
       type: object
       properties:
-        code:
+        id:
           type: string
       required:
-        - code
+        - id
     SubjectResponseDto:
       type: object
       properties:
@@ -380,12 +380,20 @@ components:
           type: string
         description:
           type: string
+        createdDate:
+          format: date-time
+          type: string
+        updatedDate:
+          format: date-time
+          type: string
       required:
         - academicalYear
         - code
         - lang
         - name
         - description
+        - createdDate
+        - updatedDate
     UpdateSubjectDto:
       type: object
       properties:

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HttpStatusCode } from 'axios';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
 import { SubjectsRepository } from '../../application/subjects.repository';
 import { Subject } from '../../entities/subject.entity';
 import { SubjectDao } from './subject.dao';
@@ -30,13 +30,21 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
       subject,
     );
 
-    return (await this.subjectRepository.save(createdSubjectDao)).code;
+    const insertResult: InsertResult = await this.subjectRepository
+      .createQueryBuilder()
+      .insert()
+      .into(SubjectDao)
+      .values(createdSubjectDao)
+      .execute();
+
+    return insertResult.identifiers[0].id;
   }
 
   async findOne(code: string): Promise<Subject> {
     const subjectDao: SubjectDao = await this.subjectRepository.findOneBy({
       code: code,
     });
+
     if (!subjectDao) {
       throw new RpcException({
         message: 'NOT FOUND',
@@ -67,10 +75,12 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
       });
     }
 
-    const updateResult: UpdateResult = await this.subjectRepository.update(
-      { code: code },
-      subject,
-    );
+    const updateResult: UpdateResult = await this.subjectRepository
+      .createQueryBuilder()
+      .update(SubjectDao)
+      .set(subject)
+      .where('code = :code', { code })
+      .execute();
 
     if (!updateResult.affected) {
       throw new RpcException({
@@ -98,7 +108,7 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
   }
 
   async deleteAll(): Promise<number> {
-    const deleteResult: DeleteResult = await this.subjectRepository.delete({});
+    //const deleteResult: DeleteResult = await this.subjectRepository.delete({});
     return 1;
   }
 }

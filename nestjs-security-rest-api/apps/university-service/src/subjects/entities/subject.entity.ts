@@ -6,8 +6,8 @@ import { UpdateSubjectDto } from '@app/shared/subjects/dto/update-subject.dto';
 import { SubjectDao } from '../infrastructure/type-orm/subject.dao';
 
 export class Subject {
-  readonly createdDate?: Date;
-  readonly updatedDate?: Date;
+  readonly createdDate: Date;
+  readonly updatedDate: Date;
 
   constructor(
     readonly academicalYear: string,
@@ -15,7 +15,12 @@ export class Subject {
     readonly lang: Languages,
     readonly name: string,
     readonly description: string,
-  ) {}
+    createdDate?: Date,
+    updatedDate?: Date,
+  ) {
+    this.createdDate = createdDate;
+    this.updatedDate = updatedDate;
+  }
 
   static fromDao(subjectDao: SubjectDao): Subject {
     const subject = new Subject(
@@ -24,6 +29,8 @@ export class Subject {
       subjectDao.lang,
       subjectDao.name,
       subjectDao.description,
+      subjectDao.createdDate,
+      subjectDao.updatedDate,
     );
 
     return subject;
@@ -50,6 +57,8 @@ export class Subject {
     subjectResponseDto.lang = subject.lang;
     subjectResponseDto.name = subject.name;
     subjectResponseDto.description = subject.description;
+    subjectResponseDto.createdDate = subject.createdDate;
+    subjectResponseDto.updatedDate = subject.updatedDate;
 
     return subjectResponseDto;
   }

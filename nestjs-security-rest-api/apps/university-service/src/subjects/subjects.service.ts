@@ -57,7 +57,7 @@ export class SubjectsService {
     }
   }
 
-  async update(code: string, subject: Partial<Subject>): Promise<number> {
+  async update(code: string, subject: Subject): Promise<number> {
     try {
       return await this.subjectsRepository.update(code, subject);
     } catch (error) {
