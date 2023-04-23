@@ -108,7 +108,19 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
   }
 
   async deleteAll(): Promise<number> {
-    //const deleteResult: DeleteResult = await this.subjectRepository.delete({});
-    return 1;
+    const deleteResult: DeleteResult = await this.subjectRepository
+      .createQueryBuilder()
+      .delete()
+      .from(SubjectDao)
+      .execute();
+
+    if (!deleteResult.affected) {
+      throw new RpcException({
+        message: 'NOT FOUND',
+        statusCode: HttpStatusCode.NotFound,
+      });
+    }
+
+    return deleteResult.affected;
   }
 }
