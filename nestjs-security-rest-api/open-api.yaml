@@ -43,6 +43,16 @@ paths:
                   $ref: "#/components/schemas/SubjectResponseDto"
       tags: *a1
       security: *a2
+    delete:
+      operationId: SubjectsController_removeAll
+      summary: Delete all subjects
+      description: Delete all subjects
+      parameters: []
+      responses:
+        "200":
+          description: ""
+      tags: *a1
+      security: *a2
   "/api/v1/subjects/{code}":
     get:
       operationId: SubjectsController_findOne

@@ -106,7 +106,13 @@ export class SubjectsController {
   update(
     @Param('code') code: string,
     @Body() updateSubjectDto: UpdateSubjectDto,
-  ): void {
+  ): Observable<number> {
+    // if (Object.values(updateSubjectDto).some((value) => value === null)) {
+    //   throw new HttpException(
+    //     'updateSubjectDto cannot contain null values',
+    //     HttpStatus.BAD_REQUEST,
+    //   );
+    // }
     code = Sanitizer.escape(code).trim();
     sanitize(updateSubjectDto);
 
@@ -118,9 +124,18 @@ export class SubjectsController {
     description: 'Delete a subject by code',
   })
   @Delete(':code')
-  remove(@Param('code') code: string): void {
+  remove(@Param('code') code: string): Observable<number> {
     code = Sanitizer.escape(code).trim();
 
     return this.subjectsService.remove(code);
+  }
+
+  @ApiOperation({
+    summary: 'Delete all subjects',
+    description: 'Delete all subjects',
+  })
+  @Delete()
+  removeAll(): Observable<number> {
+    return this.subjectsService.removeAll();
   }
 }

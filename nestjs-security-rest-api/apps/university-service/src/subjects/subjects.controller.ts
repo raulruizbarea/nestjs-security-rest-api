@@ -2,6 +2,7 @@ import { SubjectMessagePatternsName } from '@app/shared/subjects/constants/subje
 import { CreateSubjectResponseDto } from '@app/shared/subjects/dto/create-subject-response.dto';
 import { CreateSubjectDto } from '@app/shared/subjects/dto/create-subject.dto';
 import { SubjectResponseDto } from '@app/shared/subjects/dto/subject-response.dto';
+import { UpdateSubjectDto } from '@app/shared/subjects/dto/update-subject.dto';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { Subject } from './entities/subject.entity';
@@ -37,5 +38,25 @@ export class SubjectsController {
     });
 
     return subjectsDto;
+  }
+
+  @MessagePattern(SubjectMessagePatternsName.UPDATE)
+  async update(
+    @Payload() payload: { code: string; updateSubjectDto: UpdateSubjectDto },
+  ): Promise<number> {
+    return await this.subjectsService.update(
+      payload.code,
+      Subject.fromDto(payload.updateSubjectDto),
+    );
+  }
+
+  @MessagePattern(SubjectMessagePatternsName.DELETE)
+  async delete(@Payload() payload: string): Promise<number> {
+    return await this.subjectsService.delete(payload);
+  }
+
+  @MessagePattern(SubjectMessagePatternsName.DELETE_ALL)
+  async deleteAll(): Promise<number> {
+    return await this.subjectsService.deleteAll();
   }
 }

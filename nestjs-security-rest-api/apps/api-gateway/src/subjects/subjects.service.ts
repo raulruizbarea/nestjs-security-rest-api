@@ -26,9 +26,9 @@ export class SubjectsService {
     );
   }
 
-  findOne(id: string): Observable<SubjectResponseDto> {
+  findOne(code: string): Observable<SubjectResponseDto> {
     const pattern = SubjectMessagePatternsName.FIND_ONE;
-    const payload: string = id;
+    const payload: string = code;
     return this.clientUniversityService.send<SubjectResponseDto>(
       pattern,
       payload,
@@ -41,7 +41,26 @@ export class SubjectsService {
     return this.clientUniversityService.send<SubjectResponseDto[]>(pattern, {});
   }
 
-  update(id: string, updateSubjectDto: UpdateSubjectDto): void {}
+  update(code: string, updateSubjectDto: UpdateSubjectDto): Observable<number> {
+    const pattern = SubjectMessagePatternsName.UPDATE;
+    const payload = {
+      code,
+      updateSubjectDto,
+    };
 
-  remove(id: string): void {}
+    return this.clientUniversityService.send<number>(pattern, payload);
+  }
+
+  remove(code: string): Observable<number> {
+    const pattern = SubjectMessagePatternsName.DELETE;
+    const payload: string = code;
+
+    return this.clientUniversityService.send<number>(pattern, payload);
+  }
+
+  removeAll(): Observable<number> {
+    const pattern = SubjectMessagePatternsName.DELETE_ALL;
+
+    return this.clientUniversityService.send<number>(pattern, {});
+  }
 }

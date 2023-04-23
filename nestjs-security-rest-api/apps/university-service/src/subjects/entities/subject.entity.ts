@@ -2,6 +2,7 @@ import { Languages } from '@app/shared/core/types/languages';
 import { CreateSubjectResponseDto } from '@app/shared/subjects/dto/create-subject-response.dto';
 import { CreateSubjectDto } from '@app/shared/subjects/dto/create-subject.dto';
 import { SubjectResponseDto } from '@app/shared/subjects/dto/subject-response.dto';
+import { UpdateSubjectDto } from '@app/shared/subjects/dto/update-subject.dto';
 import { SubjectDao } from '../infrastructure/type-orm/subject.dao';
 
 export class Subject {
@@ -28,7 +29,9 @@ export class Subject {
     return subject;
   }
 
-  static fromDto(createSubjectDto: CreateSubjectDto): Subject {
+  static fromDto(
+    createSubjectDto: CreateSubjectDto | UpdateSubjectDto,
+  ): Subject {
     const subject = new Subject(
       createSubjectDto.academicalYear,
       createSubjectDto.code,

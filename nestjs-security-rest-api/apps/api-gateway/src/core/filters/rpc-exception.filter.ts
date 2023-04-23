@@ -17,7 +17,7 @@ export class RcpExceptionFilter implements ExceptionFilter {
 
     const _error = this._getError(exception);
 
-    response.status(HttpStatus.BAD_REQUEST).json({
+    response.status(_error.statusCode).json({
       statusCode: _error.statusCode,
       timestamp: new Date().toISOString(),
       path: request.url,
