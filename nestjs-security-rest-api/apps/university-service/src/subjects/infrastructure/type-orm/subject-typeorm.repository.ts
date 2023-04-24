@@ -1,3 +1,4 @@
+import { APP_EXCEPTION } from '@app/shared/core/constants/app-exception.catalog';
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -21,7 +22,7 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
 
     if (subjectDao) {
       throw new RpcException({
-        message: 'DUPLICATED CODE',
+        message: APP_EXCEPTION.CONFLICT,
         statusCode: HttpStatusCode.Conflict,
       });
     }
@@ -35,7 +36,13 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
       .insert()
       .into(SubjectDao)
       .values(createdSubjectDao)
-      .execute();
+      .execute()
+      .catch((exception) => {
+        throw new RpcException({
+          message: APP_EXCEPTION.BAD_REQUEST,
+          statusCode: HttpStatusCode.BadRequest,
+        });
+      });
 
     return insertResult.identifiers[0].id;
   }
@@ -47,7 +54,7 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
 
     if (!subjectDao) {
       throw new RpcException({
-        message: 'NOT FOUND',
+        message: APP_EXCEPTION.NOT_FOUND,
         statusCode: HttpStatusCode.NotFound,
       });
     }
@@ -70,7 +77,7 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
 
     if (!subjectDao) {
       throw new RpcException({
-        message: 'NOT FOUND',
+        message: APP_EXCEPTION.NOT_FOUND,
         statusCode: HttpStatusCode.NotFound,
       });
     }
@@ -80,11 +87,17 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
       .update(SubjectDao)
       .set(subject)
       .where('code = :code', { code })
-      .execute();
+      .execute()
+      .catch((exception) => {
+        throw new RpcException({
+          message: APP_EXCEPTION.BAD_REQUEST,
+          statusCode: HttpStatusCode.BadRequest,
+        });
+      });
 
     if (!updateResult.affected) {
       throw new RpcException({
-        message: 'NOT FOUND',
+        message: APP_EXCEPTION.NOT_FOUND,
         statusCode: HttpStatusCode.NotFound,
       });
     }
@@ -93,13 +106,24 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
   }
 
   async delete(code: string): Promise<number> {
+    const subjectDao: SubjectDao = await this.subjectRepository.findOneBy({
+      code: code,
+    });
+
+    if (!subjectDao) {
+      throw new RpcException({
+        message: APP_EXCEPTION.NOT_FOUND,
+        statusCode: HttpStatusCode.NotFound,
+      });
+    }
+
     const deleteResult: DeleteResult = await this.subjectRepository.delete({
       code: code,
     });
 
     if (!deleteResult.affected) {
       throw new RpcException({
-        message: 'NOT FOUND',
+        message: APP_EXCEPTION.NOT_FOUND,
         statusCode: HttpStatusCode.NotFound,
       });
     }
@@ -112,11 +136,17 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
       .createQueryBuilder()
       .delete()
       .from(SubjectDao)
-      .execute();
+      .execute()
+      .catch((exception) => {
+        throw new RpcException({
+          message: APP_EXCEPTION.BAD_REQUEST,
+          statusCode: HttpStatusCode.BadRequest,
+        });
+      });
 
     if (!deleteResult.affected) {
       throw new RpcException({
-        message: 'NOT FOUND',
+        message: APP_EXCEPTION.NOT_FOUND,
         statusCode: HttpStatusCode.NotFound,
       });
     }

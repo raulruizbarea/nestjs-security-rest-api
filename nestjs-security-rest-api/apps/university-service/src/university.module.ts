@@ -8,6 +8,7 @@ import { MicroServiceExceptionFilter } from '@app/shared/core/exceptions/microse
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SentryModule } from '@ntegral/nestjs-sentry';
 import { WinstonModule } from 'nest-winston';
 import configuration from './config/configuration';
 import { envSchema } from './config/env.schema';
@@ -17,28 +18,20 @@ import { TeachersModule } from './teachers/teachers.module';
 import { UniversityController } from './university.controller';
 import { UniversityService } from './university.service';
 
-const Sentry = require('winston-transport-sentry-node').default;
-const winston = require('winston');
-
 @Module({
   imports: [
     WinstonModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
         ...winstonConfig,
-        transports: [
-          ...winstonConfig.transports,
-          new Sentry({
-            serverName: configService.get('name'),
-            sentry: {
-              dsn: configService.get('sentry.dsn'),
-              environment: configService.get('environment'),
-              tracesSampleRate: 1.0,
-            },
-            level: 'error',
-            format: winston.format.json(),
-          }),
-        ],
         defaultMeta: { service: { name: configService.get('name') } },
+      }),
+      inject: [ConfigService],
+    }),
+    SentryModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        dsn: configService.get('sentry.dsn'),
+        environment: configService.get('environment'),
+        tracesSampleRate: 1.0,
       }),
       inject: [ConfigService],
     }),

@@ -17,8 +17,6 @@ export class RcpExceptionFilter implements ExceptionFilter {
   ) {}
 
   catch(exception: any, host: ArgumentsHost) {
-    console.log('rpc-exception');
-
     const timestamp = new Date().toISOString();
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();

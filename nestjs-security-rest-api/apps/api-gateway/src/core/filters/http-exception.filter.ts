@@ -29,17 +29,5 @@ export class HttpExceptionFilter implements ExceptionFilter {
       path: request.url,
       info: msg,
     });
-
-    if (status >= 500) {
-      this.logger.error({
-        message: msg,
-        stack: exception.stack,
-        extra: {
-          path: request.url,
-          statusCode: status,
-          timestamp: timestamp,
-        },
-      });
-    }
   }
 }

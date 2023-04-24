@@ -1,6 +1,7 @@
 import { ArgumentsHost, Catch, Inject } from '@nestjs/common';
 
 import { BaseRpcExceptionFilter } from '@nestjs/microservices';
+import * as Sentry from '@sentry/node';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 
@@ -12,14 +13,23 @@ export class MicroServiceExceptionFilter extends BaseRpcExceptionFilter {
     super();
   }
   catch(exception: any, host: ArgumentsHost) {
+    const timestamp = new Date().toISOString();
+    this.logger.error({
+      message: exception.message,
+      stack: exception.stack,
+      extra: {
+        statusCode: exception.error.statusCode,
+        timestamp,
+      },
+    });
+
     if (exception.error.statusCode >= 500) {
-      console.log('microservice exception');
-      this.logger.error({
-        message: exception.message,
-        stack: exception.stack,
+      Sentry.captureException(exception, {
         extra: {
+          timestamp,
           statusCode: exception.error.statusCode,
-          timestamp: new Date().toISOString(),
+          message: exception.message,
+          stack: exception.stack,
         },
       });
     }

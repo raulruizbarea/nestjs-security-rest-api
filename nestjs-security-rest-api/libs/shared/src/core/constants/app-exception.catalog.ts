@@ -1,0 +1,5 @@
+export enum APP_EXCEPTION {
+  BAD_REQUEST = 'APP_4000',
+  NOT_FOUND = 'APP_4004',
+  CONFLICT = 'APP_4009',
+}

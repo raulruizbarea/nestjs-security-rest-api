@@ -31,6 +31,7 @@ const consoleTransport = new winston.transports.Console({
 
 const winstonConfig = {
   transports: [fileTransport, consoleTransport],
+  level: 'info',
 };
 
 export default winstonConfig;
