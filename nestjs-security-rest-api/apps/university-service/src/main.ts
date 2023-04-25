@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/node';
+
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 import { ValidationPipe } from '@nestjs/common';
@@ -22,6 +24,12 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   const port = configService.get('port');
+
+  Sentry.init({
+    dsn: configService.get('sentry.dsn'),
+    tracesSampleRate: 1.0,
+    environment: configService.get('environment'),
+  });
 
   app.connectMicroservice<MicroserviceOptions>(
     {

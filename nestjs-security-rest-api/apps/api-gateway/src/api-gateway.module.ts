@@ -1,13 +1,13 @@
 import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 import { SharedModule } from '@app/shared';
 import winstonConfig from '@app/shared/config/winston-config';
 import { ClientServices } from '@app/shared/core/constants/client-services';
 import { LoggerMiddleware } from '@app/shared/core/middlewares/logger.middleware';
-import { APP_FILTER } from '@nestjs/core';
-import { SentryModule } from '@ntegral/nestjs-sentry';
 import { WinstonModule } from 'nest-winston';
 import { ApiGatewayController } from './api-gateway.controller';
 import { ApiGatewayService } from './api-gateway.service';
@@ -25,14 +25,6 @@ import { SubjectsModule } from './subjects/subjects.module';
       useFactory: async (configService: ConfigService) => ({
         ...winstonConfig,
         defaultMeta: { service: { name: configService.get('name') } },
-      }),
-      inject: [ConfigService],
-    }),
-    SentryModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => ({
-        dsn: configService.get('sentry.dsn'),
-        environment: configService.get('environment'),
-        tracesSampleRate: 1.0,
       }),
       inject: [ConfigService],
     }),
@@ -66,6 +58,14 @@ import { SubjectsModule } from './subjects/subjects.module';
     SharedModule,
     SubjectsModule,
     HealthModule,
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        ttl: configService.get('throttle.ttl'),
+        limit: configService.get('throttle.limit'),
+      }),
+    }),
   ],
   controllers: [ApiGatewayController],
   providers: [
@@ -77,6 +77,10 @@ import { SubjectsModule } from './subjects/subjects.module';
     {
       provide: APP_FILTER,
       useClass: RcpExceptionFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
   exports: [ClientsModule],

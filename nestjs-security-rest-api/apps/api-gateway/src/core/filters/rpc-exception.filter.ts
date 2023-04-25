@@ -38,8 +38,7 @@ export class RcpExceptionFilter implements ExceptionFilter {
   } {
     return {
       statusCode: exception?.statusCode ?? HttpStatus.BAD_REQUEST,
-      //TODO: share everything that has an error or just global one? e.g. description should be a string
-      message: exception?.response?.message ?? exception?.message,
+      message: exception?.message,
     };
   }
 }

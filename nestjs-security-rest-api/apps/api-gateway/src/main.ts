@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/node';
 import * as fs from 'fs';
 import * as yaml from 'yaml';
 
@@ -38,6 +39,12 @@ async function bootstrap() {
   const schema = configService.get('schema');
   const host = configService.get('host');
   const port = configService.get('port');
+
+  Sentry.init({
+    dsn: configService.get('sentry.dsn'),
+    tracesSampleRate: 1.0,
+    environment: configService.get('environment'),
+  });
 
   const options = new DocumentBuilder()
     .setTitle('NestJS Security REST API')

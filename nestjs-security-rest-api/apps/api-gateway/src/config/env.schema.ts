@@ -9,4 +9,6 @@ export const envSchema = Joi.object({
   UNIVERSITY_SERVICE_HOST: Joi.string().required(),
   UNIVERSITY_SERVICE_PORT: Joi.number().required(),
   SENTRY_DSN: Joi.string().required(),
+  THROTTLE_TTL: Joi.number().required(),
+  THROTTLE_LIMIT: Joi.number().required(),
 });

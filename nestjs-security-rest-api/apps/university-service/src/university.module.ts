@@ -4,11 +4,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { SharedModule } from '@app/shared';
 import winstonConfig from '@app/shared/config/winston-config';
-import { MicroServiceExceptionFilter } from '@app/shared/core/exceptions/microservice-exception.filter';
+import { MicroServiceExceptionFilter } from '@app/shared/core/filters/microservice-exception.filter';
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SentryModule } from '@ntegral/nestjs-sentry';
 import { WinstonModule } from 'nest-winston';
 import configuration from './config/configuration';
 import { envSchema } from './config/env.schema';
@@ -24,14 +23,6 @@ import { UniversityService } from './university.service';
       useFactory: async (configService: ConfigService) => ({
         ...winstonConfig,
         defaultMeta: { service: { name: configService.get('name') } },
-      }),
-      inject: [ConfigService],
-    }),
-    SentryModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => ({
-        dsn: configService.get('sentry.dsn'),
-        environment: configService.get('environment'),
-        tracesSampleRate: 1.0,
       }),
       inject: [ConfigService],
     }),

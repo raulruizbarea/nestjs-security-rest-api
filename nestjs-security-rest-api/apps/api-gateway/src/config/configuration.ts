@@ -11,4 +11,8 @@ export default () => ({
   sentry: {
     dsn: process.env.SENTRY_DSN,
   },
+  throttle: {
+    ttl: process.env.THROTTLE_TTL,
+    limit: process.env.THROTTLE_LIMIT,
+  },
 });
