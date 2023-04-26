@@ -3,22 +3,62 @@ name: nestjs-security-rest-api-infra
 services:
   uoc-database:
     image: 'postgres:${POSTGRES_VERSION:?err}'
-    restart: always
     volumes:
       - ./initialize-uoc-database.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       uocnetwork:
         aliases:
           - uoc-database
-  uoc-api-gateway:
-    command: node dist/main
-    ports:
-      - '${API_GATEWAY_PORT:?err}:${API_GATEWAY_PORT:?err}'
-    restart: always
+  # uoc-api-gateway:
+  #   command: node dist/main
+  #   ports:
+  #     - '${API_GATEWAY_PORT:?err}:${API_GATEWAY_PORT:?err}'
+  #   restart: always
+  #   networks:
+  #     uocnetwork:
+  #       aliases:
+  #         - uoc-api-gateway
+
+  uoc-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.0
+    environment:
+      - xpack.security.enabled=false
+      - 'discovery.type=single-node'
     networks:
       uocnetwork:
         aliases:
-          - uoc-api-gateway
+          - uoc-elasticsearch
+
+  uoc-kibana:
+    image: docker.elastic.co/kibana/kibana:8.7.0
+    environment:
+      ELASTICSEARCH_HOSTS: http://uoc-elasticsearch:9200
+    depends_on:
+      - uoc-elasticsearch
+    networks:
+      uocnetwork:
+        aliases:
+          - uoc-kibana
+
+  uoc-filebeat:
+    image: docker.elastic.co/beats/filebeat:8.7.0
+    user: root
+    command: ['filebeat', '-e', '-strict.perms=false']
+    environment:
+      ELASTICSEARCH_HOSTS: http://uoc-elasticsearch:9200
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /c/Users/raul_/Documents/Repos/nestjs-security-rest-api/nestjs-security-rest-api/logs:/var/log:ro
+      # - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      # - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - uoc-elasticsearch
+      - uoc-kibana
+    networks:
+      uocnetwork:
+        aliases:
+          - uoc-filebeat
 
 networks:
   uocnetwork:
+    driver: bridge

@@ -1,25 +1,39 @@
 version: '3.9'
-name: nestjs-security-rest-api-infra-development
+name: nestjs-security-rest-api-infra
 services:
   uoc-database:
-    container_name: 'uoc-database-development'
+    container_name: 'uoc-database'
     env_file:
-      - ./environments/.uoc-database.development.env
+      - ./environments/.uoc-database.env
     healthcheck:
-      test: pg_isready -d uoc-database-development -U admin
+      test: pg_isready -d uoc-database -U admin
     ports:
       - '5432:5432'
     volumes:
       - ./uoc-database:/var/lib/postgresql/data
 
-  uoc-api-gateway:
-    container_name: 'uoc.api-gateway-development'
-    image: 'uoc-api-gateway-development'
-    env_file:
-      - ./environments/.uoc-api-gateway.development.env
-    build:
-      context: ./../nestjs-security-rest-api-gateway
-      dockerfile: Dockerfile
-      args:
-        NODE_ALPINE_VERSION: ${NODE_ALPINE_VERSION:?err}
-        PORT: ${API_GATEWAY_PORT:?err}
+  # uoc-api-gateway:
+  #   container_name: 'uoc-api-gateway'
+  #   image: 'uoc-api-gateway'
+  #   env_file:
+  #     - ./environments/.uoc-api-gateway.env
+  #   build:
+  #     context: ./../nestjs-security-rest-api-gateway
+  #     dockerfile: Dockerfile
+  #     args:
+  #       NODE_ALPINE_VERSION: ${NODE_ALPINE_VERSION:?err}
+  #       PORT: ${API_GATEWAY_PORT:?err}
+
+  uoc-elasticsearch:
+    container_name: 'uoc-elasticsearch'
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    volumes:
+      - ./uoc-elasticsearch:/usr/share/elasticsearch/data
+  uoc-kibana:
+    container_name: 'uoc-kibana'
+    ports:
+      - '5601:5601'
+  uoc-filebeat:
+    container_name: 'uoc-filebeat'

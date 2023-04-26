@@ -1,0 +1,20 @@
+filebeat.inputs:
+  - type: filestream
+    id: nestjs-security-rest-api-logs
+    enabled: true
+    paths:
+      - /var/log/*.log
+    parsers:
+      - ndjson:
+        overwrite_keys: true
+        add_error_key: true
+        expand_keys: true
+
+processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
+
+output.elasticsearch:
+  hosts: ['uoc-elasticsearch:9200']
