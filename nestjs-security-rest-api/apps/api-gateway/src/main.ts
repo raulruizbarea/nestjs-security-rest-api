@@ -54,12 +54,12 @@ async function bootstrap() {
       {
         type: 'http',
         scheme: 'Bearer',
-        bearerFormat: 'JWT',
+        bearerFormat: 'Bearer',
         name: 'JWT',
         description: 'Enter JWT token',
         in: 'header',
       },
-      'access_token',
+      'access-token',
     )
     .addServer(`${schema}://${host}:${port}`)
     .build();

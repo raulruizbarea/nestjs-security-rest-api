@@ -11,4 +11,6 @@ export const envSchema = Joi.object({
   SENTRY_DSN: Joi.string().required(),
   THROTTLE_TTL: Joi.number().required(),
   THROTTLE_LIMIT: Joi.number().required(),
+  AUTH0_ISSUER_URL: Joi.string().required(),
+  AUTH0_AUDIENCE: Joi.string().required(),
 });

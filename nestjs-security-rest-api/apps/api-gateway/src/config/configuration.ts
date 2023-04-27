@@ -15,4 +15,8 @@ export default () => ({
     ttl: process.env.THROTTLE_TTL,
     limit: process.env.THROTTLE_LIMIT,
   },
+  auth0: {
+    issuerUrl: process.env.AUTH0_ISSUER_URL,
+    audience: process.env.AUTH0_AUDIENCE,
+  },
 });

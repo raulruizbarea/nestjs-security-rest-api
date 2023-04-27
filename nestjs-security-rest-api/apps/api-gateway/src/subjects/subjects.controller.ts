@@ -12,7 +12,9 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -49,6 +51,7 @@ export class SubjectsController {
   @ApiInternalServerErrorResponse({
     description: 'Internal Server Error.',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   create(
     @Body() createSubjectDto: CreateSubjectDto,
@@ -102,6 +105,11 @@ export class SubjectsController {
     summary: 'Update a subject by code',
     description: 'Update a subject by code',
   })
+  @ApiOkResponse({
+    description: 'The subject has been updated.',
+    type: Number,
+  })
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':code')
   update(
     @Param('code') code: string,
@@ -123,6 +131,11 @@ export class SubjectsController {
     summary: 'Delete a subject by code',
     description: 'Delete a subject by code',
   })
+  @ApiOkResponse({
+    description: 'The subject has been deleted.',
+    type: Number,
+  })
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':code')
   remove(@Param('code') code: string): Observable<number> {
     code = Sanitizer.escape(code).trim();
@@ -134,6 +147,11 @@ export class SubjectsController {
     summary: 'Delete all subjects',
     description: 'Delete all subjects',
   })
+  @ApiOkResponse({
+    description: 'The subjects have been deleted.',
+    type: Number,
+  })
+  @UseGuards(AuthGuard('jwt'))
   @Delete()
   removeAll(): Observable<number> {
     return this.subjectsService.removeAll();

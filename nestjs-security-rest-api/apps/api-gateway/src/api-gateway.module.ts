@@ -11,6 +11,7 @@ import { LoggerMiddleware } from '@app/shared/core/middlewares/logger.middleware
 import { WinstonModule } from 'nest-winston';
 import { ApiGatewayController } from './api-gateway.controller';
 import { ApiGatewayService } from './api-gateway.service';
+import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
 import { envSchema } from './config/env.schema';
 import { HttpExceptionFilter } from './core/filters/http-exception.filter';
@@ -56,8 +57,9 @@ import { SubjectsModule } from './subjects/subjects.module';
       },
     ]),
     SharedModule,
-    SubjectsModule,
+    AuthModule,
     HealthModule,
+    SubjectsModule,
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
