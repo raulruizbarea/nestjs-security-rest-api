@@ -14,6 +14,7 @@ export class ThrottlerExceptionFilter implements ExceptionFilter {
 
   catch(exception: ThrottlerException, host: ArgumentsHost) {
     const ttl = this.configService.get('throttle.ttl');
+    const limit = this.configService.get('throttle.limit');
     const timestamp = new Date().toISOString();
     const ctx = host.switchToHttp();
     const request = ctx.getRequest<Request>();
@@ -25,7 +26,7 @@ export class ThrottlerExceptionFilter implements ExceptionFilter {
       statusCode: HttpStatus.TOO_MANY_REQUESTS,
       timestamp: timestamp,
       path: request.url,
-      info: 'Too many requests',
+      info: `Too many requests, limit: ${limit}, ttl: ${ttl}`,
     });
   }
 }
