@@ -1,6 +1,6 @@
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { passportJwtSecret } from 'jwks-rsa';
@@ -27,7 +27,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  validate(payload: unknown): unknown {
+  async validate(payload: any): Promise<any> {
+    if (!payload) {
+      throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+    }
+
     return payload;
   }
 }

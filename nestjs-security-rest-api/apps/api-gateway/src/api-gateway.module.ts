@@ -16,6 +16,7 @@ import configuration from './config/configuration';
 import { envSchema } from './config/env.schema';
 import { HttpExceptionFilter } from './core/filters/http-exception.filter';
 import { RcpExceptionFilter } from './core/filters/rpc-exception.filter';
+import { ThrottlerExceptionFilter } from './core/filters/throttler-exception.filter';
 import { HealthModule } from './health/health.module';
 import { SubjectsModule } from './subjects/subjects.module';
 
@@ -83,6 +84,10 @@ import { SubjectsModule } from './subjects/subjects.module';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: ThrottlerExceptionFilter,
     },
   ],
   exports: [ClientsModule],
