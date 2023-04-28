@@ -11,7 +11,13 @@ import helmet from 'helmet';
 import { ApiGatewayModule } from './api-gateway.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(ApiGatewayModule, { bufferLogs: true });
+  const app = await NestFactory.create(ApiGatewayModule, {
+    bufferLogs: true,
+    httpsOptions: {
+      key: fs.readFileSync('./secrets/key.pem'),
+      cert: fs.readFileSync('./secrets/cert.pem'),
+    },
+  });
   const configService = app.get(ConfigService);
 
   app.use(helmet());
