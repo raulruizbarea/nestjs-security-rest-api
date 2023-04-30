@@ -24,15 +24,61 @@ services:
       uocnetwork:
         aliases:
           - uoc-database
-  # uoc-api-gateway:
-  #   command: node dist/main
-  #   ports:
-  #     - '${API_GATEWAY_PORT:?err}:${API_GATEWAY_PORT:?err}'
-  #   restart: always
-  #   networks:
-  #     uocnetwork:
-  #       aliases:
-  #         - uoc-api-gateway
+  uoc-api-gateway:
+    command: node dist/main
+    ports:
+      - '${API_GATEWAY_PORT:?err}:${API_GATEWAY_PORT:?err}'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          cpus: '2'
+          memory: '4g'
+        reservations:
+          cpus: '1'
+          memory: '2g'
+    storage_opt:
+      size: '4g'
+    depends_on:
+      - uoc-university-service
+    networks:
+      uocnetwork:
+        aliases:
+          - uoc-api-gateway
+
+  uoc-university-service:
+    command: node dist/main
+    # ports:
+    #   - '${UNIVERSITY_APP_PORT:?err}:${UNIVERSITY_APP_PORT:?err}'
+    #   - '${UNIVERSITY_SERVICE_PORT:?err}:${UNIVERSITY_SERVICE_PORT:?err}'
+    expose:
+      - '${UNIVERSITY_APP_PORT:?err}'
+      - '${UNIVERSITY_SERVICE_PORT:?err}'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          cpus: '2'
+          memory: '4g'
+        reservations:
+          cpus: '1'
+          memory: '2g'
+    storage_opt:
+      size: '4g'
+    depends_on:
+      - uoc-database
+    networks:
+      uocnetwork:
+        aliases:
+          - uoc-university-service
 
   uoc-elasticsearch:
     image: 'docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION:?err}'
@@ -97,6 +143,8 @@ services:
     volumes:
       - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
       - /c/Users/raul_/Documents/Repos/nestjs-security-rest-api/nestjs-security-rest-api/logs:/var/log:ro
+      # /home/node/university-service/logs/
+      # /home/node/api-gateway/logs/
       # - /var/lib/docker/containers:/var/lib/docker/containers:ro
       # - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:

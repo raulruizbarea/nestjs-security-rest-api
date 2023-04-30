@@ -2,14 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { Languages } from '@app/shared/core/types/languages';
-import { TeacherDao } from 'apps/university-service/src/teachers/infrastructure/type-orm/teacher.dao';
 import { DbTableNames } from '../../../core/constants/db-table-names';
 import { Subject } from '../../entities/subject.entity';
 
@@ -39,20 +36,20 @@ export class SubjectDao extends Subject {
   @UpdateDateColumn({ nullable: true, type: 'timestamptz' })
   updatedDate: Date;
 
-  @ManyToMany(() => TeacherDao, (teacher) => teacher.subjects, {
-    onDelete: 'NO ACTION',
-    onUpdate: 'NO ACTION',
-  })
-  @JoinTable({
-    name: 'subject_teacher',
-    joinColumn: {
-      name: 'subject_id',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'teacher_id',
-      referencedColumnName: 'id',
-    },
-  })
-  teachers?: TeacherDao[];
+  // @ManyToMany(() => TeacherDao, (teacher) => teacher.subjects, {
+  //   onDelete: 'NO ACTION',
+  //   onUpdate: 'NO ACTION',
+  // })
+  // @JoinTable({
+  //   name: 'subject_teacher',
+  //   joinColumn: {
+  //     name: 'subject_id',
+  //     referencedColumnName: 'id',
+  //   },
+  //   inverseJoinColumn: {
+  //     name: 'teacher_id',
+  //     referencedColumnName: 'id',
+  //   },
+  // })
+  // teachers?: TeacherDao[];
 }

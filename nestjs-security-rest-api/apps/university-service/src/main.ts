@@ -24,6 +24,8 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   const port = configService.get('port');
+  const universityPort = configService.get('university.port');
+  const universityHost = configService.get('university.host');
 
   Sentry.init({
     dsn: configService.get('sentry.dsn'),
@@ -35,7 +37,8 @@ async function bootstrap() {
     {
       transport: Transport.TCP,
       options: {
-        port: port,
+        host: universityHost,
+        port: universityPort,
       },
     },
     { inheritAppConfig: true },

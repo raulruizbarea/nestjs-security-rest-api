@@ -1,0 +1,38 @@
+ARG NODE_ALPINE_VERSION
+ARG PORT
+
+FROM node:${NODE_ALPINE_VERSION} as builder
+
+WORKDIR /usr/src/university-service
+
+COPY package*.json ./
+
+RUN npm install -g @nestjs/cli
+
+RUN npm install
+
+COPY . ./
+
+RUN npm run build shared
+
+RUN npm run build university-service
+
+FROM node:${NODE_ALPINE_VERSION} as production
+
+WORKDIR /home/node/university-service
+
+RUN chown node:node /home/node/university-service
+
+RUN apk add --no-cache tzdata
+
+ENV TZ=Europe/Madrid
+
+USER node
+
+COPY --from=builder --chown=node:node /usr/src/university-service/package*.json /home/node/university-service/
+COPY --from=builder --chown=node:node /usr/src/university-service/node_modules /home/node/university-service/node_modules
+COPY --from=builder --chown=node:node /usr/src/university-service/dist /home/node/university-service/dist
+
+EXPOSE $PORT
+
+ENTRYPOINT ["node", "dist/apps/university-service/main"]
