@@ -2,20 +2,20 @@ import * as ormconfig from './ormconfig';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-import { SharedModule } from '@app/shared';
-import winstonConfig from '@app/shared/config/winston-config';
+import { APP_FILTER } from '@nestjs/core';
+import { HealthModule } from './health/health.module';
 import { MicroServiceExceptionFilter } from '@app/shared/core/filters/microservice-exception.filter';
 import { Module } from '@nestjs/common';
-import { APP_FILTER } from '@nestjs/core';
+import { SharedModule } from '@app/shared';
+import { SubjectsModule } from './subjects/subjects.module';
+import { TeachersModule } from './teachers/teachers.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UniversityController } from './university.controller';
+import { UniversityService } from './university.service';
 import { WinstonModule } from 'nest-winston';
 import configuration from './config/configuration';
 import { envSchema } from './config/env.schema';
-import { HealthModule } from './health/health.module';
-import { SubjectsModule } from './subjects/subjects.module';
-import { TeachersModule } from './teachers/teachers.module';
-import { UniversityController } from './university.controller';
-import { UniversityService } from './university.service';
+import winstonConfig from '@app/shared/config/winston-config';
 
 @Module({
   imports: [
@@ -45,7 +45,7 @@ import { UniversityService } from './university.service';
     }),
     SubjectsModule,
     SharedModule,
-    TeachersModule,
+    //TeachersModule,
     HealthModule,
   ],
   providers: [
