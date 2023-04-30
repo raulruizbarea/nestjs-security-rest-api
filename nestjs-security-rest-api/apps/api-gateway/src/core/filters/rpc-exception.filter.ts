@@ -41,7 +41,10 @@ export class RcpExceptionFilter implements ExceptionFilter {
         exception?.response?.statusCode ??
         exception?.statusCode ??
         HttpStatus.BAD_REQUEST,
-      message: exception?.response?.message ?? exception?.message,
+      message:
+        exception?.response?.message ??
+        exception?.response ??
+        exception?.message,
     };
   }
 }

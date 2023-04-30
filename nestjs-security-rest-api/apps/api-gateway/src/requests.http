@@ -1,2 +1,2 @@
 ### List all subjects
-GET http://localhost:3000/api/v1
+GET https://localhost/api/v1/subjects
