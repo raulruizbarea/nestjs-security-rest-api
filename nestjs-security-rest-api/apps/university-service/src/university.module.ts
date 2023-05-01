@@ -1,3 +1,6 @@
+import 'winston-daily-rotate-file';
+
+import * as winston from 'winston';
 import * as ormconfig from './ormconfig';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -16,11 +19,25 @@ import { SubjectsModule } from './subjects/subjects.module';
 import { UniversityController } from './university.controller';
 import { UniversityService } from './university.service';
 
+const ecsFormat = require('@elastic/ecs-winston-format');
+
 @Module({
   imports: [
     WinstonModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
         ...winstonConfig,
+        transports: [
+          ...winstonConfig.transports,
+          new winston.transports.DailyRotateFile({
+            filename: '%DATE%-university-service.log',
+            dirname: './logs',
+            datePattern: 'YYYY-MM-DD',
+            zippedArchive: false,
+            maxFiles: '30d',
+            format: ecsFormat({ convertReqRes: true }),
+            level: 'http',
+          }),
+        ],
         defaultMeta: { service: { name: configService.get('name') } },
       }),
       inject: [ConfigService],

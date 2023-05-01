@@ -1,3 +1,7 @@
+import 'winston-daily-rotate-file';
+
+import * as winston from 'winston';
+
 import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
@@ -20,12 +24,26 @@ import { ThrottlerExceptionFilter } from './core/filters/throttler-exception.fil
 import { HealthModule } from './health/health.module';
 import { SubjectsModule } from './subjects/subjects.module';
 
+const ecsFormat = require('@elastic/ecs-winston-format');
+
 @Global()
 @Module({
   imports: [
     WinstonModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
         ...winstonConfig,
+        transports: [
+          ...winstonConfig.transports,
+          new winston.transports.DailyRotateFile({
+            filename: '%DATE%-api-gateway.log',
+            dirname: './logs',
+            datePattern: 'YYYY-MM-DD',
+            zippedArchive: false,
+            maxFiles: '30d',
+            format: ecsFormat({ convertReqRes: true }),
+            level: 'http',
+          }),
+        ],
         defaultMeta: { service: { name: configService.get('name') } },
       }),
       inject: [ConfigService],

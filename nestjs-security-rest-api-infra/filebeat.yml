@@ -3,7 +3,8 @@ filebeat.inputs:
     id: nestjs-security-rest-api-logs
     enabled: true
     paths:
-      - /var/log/*.log
+      - /var/log/api-gateway/*.log
+      - /var/log/university-service/*.log
     parsers:
       - ndjson:
         overwrite_keys: true

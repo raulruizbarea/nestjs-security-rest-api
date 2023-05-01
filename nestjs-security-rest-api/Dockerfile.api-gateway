@@ -25,6 +25,10 @@ WORKDIR /home/node/api-gateway
 
 RUN chown node:node /home/node/api-gateway
 
+RUN mkdir /home/node/api-gateway/logs && \
+    chown node:node /home/node/api-gateway/logs && \
+    chmod 775 /home/node/api-gateway/logs
+
 RUN apk add --no-cache tzdata
 
 ENV TZ=Europe/Madrid

@@ -7,10 +7,8 @@ services:
       - ./environments/.uoc-database.env
     healthcheck:
       test: pg_isready -d uoc-database -U admin
-    ports:
-      - '5432:5432'
-    # expose:
-    #   - '5432'
+    expose:
+      - '5432'
     volumes:
       - ./uoc-database:/var/lib/postgresql/data
 

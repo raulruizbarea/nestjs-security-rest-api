@@ -14,10 +14,10 @@ services:
       resources:
         limits:
           cpus: '2'
-          memory: '4g'
+          memory: '2g'
         reservations:
           cpus: '1'
-          memory: '2g'
+          memory: '1g'
     storage_opt:
       size: '4g'
     networks:
@@ -28,6 +28,8 @@ services:
     command: node dist/main
     ports:
       - '${API_GATEWAY_PORT:?err}:${API_GATEWAY_PORT:?err}'
+    volumes:
+      - ./uoc-api-gateway:/home/node/api-gateway/logs
     deploy:
       restart_policy:
         condition: on-failure
@@ -37,10 +39,10 @@ services:
       resources:
         limits:
           cpus: '2'
-          memory: '4g'
+          memory: '2g'
         reservations:
           cpus: '1'
-          memory: '2g'
+          memory: '1g'
     storage_opt:
       size: '4g'
     depends_on:
@@ -52,12 +54,11 @@ services:
 
   uoc-university-service:
     command: node dist/main
-    # ports:
-    #   - '${UNIVERSITY_APP_PORT:?err}:${UNIVERSITY_APP_PORT:?err}'
-    #   - '${UNIVERSITY_SERVICE_PORT:?err}:${UNIVERSITY_SERVICE_PORT:?err}'
     expose:
       - '${UNIVERSITY_APP_PORT:?err}'
       - '${UNIVERSITY_SERVICE_PORT:?err}'
+    volumes:
+      - ./uoc-university-service:/home/node/university-service/logs
     deploy:
       restart_policy:
         condition: on-failure
@@ -67,10 +68,10 @@ services:
       resources:
         limits:
           cpus: '2'
-          memory: '4g'
+          memory: '2g'
         reservations:
           cpus: '1'
-          memory: '2g'
+          memory: '1g'
     storage_opt:
       size: '4g'
     depends_on:
@@ -94,11 +95,11 @@ services:
         window: 120s
       resources:
         limits:
-          cpus: '2'
-          memory: '4g'
+          cpus: '4'
+          memory: '6g'
         reservations:
-          cpus: '1'
-          memory: '2g'
+          cpus: '2'
+          memory: '3g'
     storage_opt:
       size: '1g'
     networks:
@@ -142,11 +143,9 @@ services:
       ELASTICSEARCH_HOSTS: http://uoc-elasticsearch:9200
     volumes:
       - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - /c/Users/raul_/Documents/Repos/nestjs-security-rest-api/nestjs-security-rest-api/logs:/var/log:ro
-      # /home/node/university-service/logs/
-      # /home/node/api-gateway/logs/
-      # - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      # - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./uoc-api-gateway/:/var/log/api-gateway:ro
+      - ./uoc-university-service/:/var/log/university-service:ro
+      # - /c/Users/raul_/Documents/Repos/nestjs-security-rest-api/nestjs-security-rest-api/logs:/var/log:ro
     depends_on:
       - uoc-elasticsearch
       - uoc-kibana

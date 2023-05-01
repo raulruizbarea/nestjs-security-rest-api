@@ -23,6 +23,10 @@ WORKDIR /home/node/university-service
 
 RUN chown node:node /home/node/university-service
 
+RUN mkdir /home/node/university-service/logs && \
+    chown node:node /home/node/university-service/logs && \
+    chmod 775 /home/node/university-service/logs
+
 RUN apk add --no-cache tzdata
 
 ENV TZ=Europe/Madrid
