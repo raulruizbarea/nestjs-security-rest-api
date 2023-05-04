@@ -1,3 +1,5 @@
+import { PageOptionsDto } from '@app/shared/core/dto/page-options.dto';
+import { PageDto } from '@app/shared/core/dto/page.dto';
 import { SubjectMessagePatternsName } from '@app/shared/subjects/constants/subject-message-patterns-name';
 import { CreateSubjectResponseDto } from '@app/shared/subjects/dto/create-subject-response.dto';
 import { CreateSubjectDto } from '@app/shared/subjects/dto/create-subject.dto';
@@ -31,13 +33,20 @@ export class SubjectsController {
   }
 
   @MessagePattern(SubjectMessagePatternsName.FIND_ALL)
-  async findAll(): Promise<SubjectResponseDto[]> {
-    const subjects: Subject[] = await this.subjectsService.findAll();
-    const subjectsDto: SubjectResponseDto[] = subjects.map((subject) => {
-      return Subject.toDto(subject);
-    });
+  async findAll(
+    @Payload() payload: PageOptionsDto,
+  ): Promise<PageDto<SubjectResponseDto>> {
+    const pagedSubjects: PageDto<Subject> = await this.subjectsService.findAll(
+      payload,
+    );
+    const pagedSubjectsResponseDto: PageDto<SubjectResponseDto> = {
+      data: pagedSubjects.data.map((subject) => {
+        return Subject.toDto(subject);
+      }),
+      meta: pagedSubjects.meta,
+    };
 
-    return subjectsDto;
+    return pagedSubjectsResponseDto;
   }
 
   @MessagePattern(SubjectMessagePatternsName.UPDATE)

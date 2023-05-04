@@ -237,7 +237,31 @@ paths:
       operationId: SubjectsController_findAll
       summary: Find all subjects
       description: Find all subjects
-      parameters: []
+      parameters:
+        - name: order
+          required: false
+          in: query
+          schema:
+            default: ASC
+            enum:
+              - ASC
+              - DESC
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            default: 1
+            type: number
+        - name: take
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 50
+            default: 10
+            type: number
       responses:
         "200":
           description: The subject has been found.

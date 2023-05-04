@@ -1,3 +1,5 @@
+import { PageOptionsDto } from '@app/shared/core/dto/page-options.dto';
+import { PageDto } from '@app/shared/core/dto/page.dto';
 import { CreateSubjectResponseDto } from '@app/shared/subjects/dto/create-subject-response.dto';
 import { CreateSubjectDto } from '@app/shared/subjects/dto/create-subject.dto';
 import { SubjectResponseDto } from '@app/shared/subjects/dto/subject-response.dto';
@@ -12,6 +14,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -97,8 +100,10 @@ export class SubjectsController {
     isArray: true,
   })
   @Get()
-  findAll() {
-    return this.subjectsService.findAll();
+  findAll(
+    @Query() pageOptionsDto: PageOptionsDto,
+  ): Observable<PageDto<SubjectResponseDto>> {
+    return this.subjectsService.findAll(pageOptionsDto);
   }
 
   @ApiOperation({

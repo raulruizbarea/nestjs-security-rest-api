@@ -1,4 +1,6 @@
 import { ClientServices } from '@app/shared/core/constants/client-services';
+import { PageOptionsDto } from '@app/shared/core/dto/page-options.dto';
+import { PageDto } from '@app/shared/core/dto/page.dto';
 import { SubjectMessagePatternsName } from '@app/shared/subjects/constants/subject-message-patterns-name';
 import { CreateSubjectResponseDto } from '@app/shared/subjects/dto/create-subject-response.dto';
 import { CreateSubjectDto } from '@app/shared/subjects/dto/create-subject.dto';
@@ -35,10 +37,14 @@ export class SubjectsService {
     );
   }
 
-  findAll(): Observable<SubjectResponseDto[]> {
+  findAll(pageDto: PageOptionsDto): Observable<PageDto<SubjectResponseDto>> {
     const pattern = SubjectMessagePatternsName.FIND_ALL;
+    const payload: PageOptionsDto = pageDto;
 
-    return this.clientUniversityService.send<SubjectResponseDto[]>(pattern, {});
+    return this.clientUniversityService.send<PageDto<SubjectResponseDto>>(
+      pattern,
+      payload,
+    );
   }
 
   update(code: string, updateSubjectDto: UpdateSubjectDto): Observable<number> {

@@ -1,9 +1,19 @@
 import { APP_EXCEPTION } from '@app/shared/core/constants/app-exception.catalog';
+import { PageMetaDto } from '@app/shared/core/dto/page-meta.dto';
+import { PageOptionsDto } from '@app/shared/core/dto/page-options.dto';
+import { PageDto } from '@app/shared/core/dto/page.dto';
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DbTableNames } from 'apps/university-service/src/core/constants/db-table-names';
 import { HttpStatusCode } from 'axios';
-import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
+import {
+  DeleteResult,
+  InsertResult,
+  Repository,
+  SelectQueryBuilder,
+  UpdateResult,
+} from 'typeorm';
 import { SubjectsRepository } from '../../application/subjects.repository';
 import { Subject } from '../../entities/subject.entity';
 import { SubjectDao } from './subject.dao';
@@ -61,13 +71,30 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
     return Subject.fromDao(subjectDao);
   }
 
-  async findAll(): Promise<Subject[]> {
-    const subjectsDao: SubjectDao[] = await this.subjectRepository.find();
+  async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Subject>> {
+    try {
+      const queryResult: SelectQueryBuilder<SubjectDao> =
+        await this.subjectRepository
+          .createQueryBuilder(DbTableNames.SUBJECT)
+          .orderBy('"createdDate"', pageOptionsDto.order)
+          .skip(pageOptionsDto.skip)
+          .take(pageOptionsDto.take);
 
-    const subjects: Subject[] = subjectsDao.map((subjectDao) => {
-      return Subject.fromDao(subjectDao);
-    });
-    return subjects;
+      const itemCount = await queryResult.getCount();
+      const { entities } = await queryResult.getRawAndEntities();
+      const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+
+      const subjects: Subject[] = entities.map((subjectDao) => {
+        return Subject.fromDao(subjectDao);
+      });
+
+      return new PageDto(subjects, pageMetaDto);
+    } catch (error) {
+      throw new RpcException({
+        message: APP_EXCEPTION.BAD_REQUEST,
+        statusCode: HttpStatusCode.BadRequest,
+      });
+    }
   }
 
   async update(code: string, subject: Subject): Promise<number> {

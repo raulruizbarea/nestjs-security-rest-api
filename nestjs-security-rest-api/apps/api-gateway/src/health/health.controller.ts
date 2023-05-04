@@ -1,5 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, Get } from '@nestjs/common';
 import {
   DiskHealthIndicator,
   HealthCheck,
@@ -10,10 +10,10 @@ import {
 } from '@nestjs/terminus';
 
 import { ConfigService } from '@nestjs/config';
-import { Transport } from '@nestjs/microservices';
+import { HealthService } from './health.service';
 import { Observable } from 'rxjs';
 import { Tags } from '../core/constants/swagger/tags';
-import { HealthService } from './health.service';
+import { Transport } from '@nestjs/microservices';
 
 @ApiTags(Tags.HEALTH)
 @Controller('health')
@@ -37,7 +37,8 @@ export class HealthController {
     return this.health.check([
       () =>
         this.disk.checkStorage('storage', {
-          path: 'C:\\',
+          //path: 'C:\\',
+          path: '/',
           thresholdPercent: 0.8,
         }),
       () => this.memory.checkHeap('memory_heap', 150 * 1024 * 1024),

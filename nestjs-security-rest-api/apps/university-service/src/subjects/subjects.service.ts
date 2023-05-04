@@ -1,3 +1,5 @@
+import { PageOptionsDto } from '@app/shared/core/dto/page-options.dto';
+import { PageDto } from '@app/shared/core/dto/page.dto';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { SubjectsRepository } from './application/subjects.repository';
@@ -32,9 +34,9 @@ export class SubjectsService {
     }
   }
 
-  async findAll(): Promise<Subject[]> {
+  async findAll(pageOptions: PageOptionsDto): Promise<PageDto<Subject>> {
     try {
-      return await this.subjectsRepository.findAll();
+      return await this.subjectsRepository.findAll(pageOptions);
     } catch (error) {
       throw new RpcException({
         message: error.message,
