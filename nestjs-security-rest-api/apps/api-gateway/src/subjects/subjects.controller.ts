@@ -1,5 +1,6 @@
 import { PageOptionsDto } from '@app/shared/core/dto/page-options.dto';
 import { PageDto } from '@app/shared/core/dto/page.dto';
+import { SubjectPermissionName } from '@app/shared/subjects/constants/subject-permission-name';
 import { CreateSubjectResponseDto } from '@app/shared/subjects/dto/create-subject-response.dto';
 import { CreateSubjectDto } from '@app/shared/subjects/dto/create-subject.dto';
 import { SubjectResponseDto } from '@app/shared/subjects/dto/subject-response.dto';
@@ -30,6 +31,8 @@ import {
 } from '@nestjs/swagger';
 import { Sanitizer, sanitize } from 'class-sanitizer';
 import { Observable } from 'rxjs';
+import { Permissions } from '../auth/decorators/permissions.decorator';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { Tags } from '../core/constants/swagger/tags';
 import { SubjectsService } from './subjects.service';
 
@@ -54,8 +57,9 @@ export class SubjectsController {
   @ApiInternalServerErrorResponse({
     description: 'Internal Server Error.',
   })
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Post()
+  @Permissions(SubjectPermissionName.CREATE)
   create(
     @Body() createSubjectDto: CreateSubjectDto,
   ): Observable<CreateSubjectResponseDto> {
@@ -83,7 +87,9 @@ export class SubjectsController {
     description: 'The subject has been found.',
     type: SubjectResponseDto,
   })
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Get(':code')
+  @Permissions(SubjectPermissionName.READ)
   findOne(@Param('code') code: string): Observable<SubjectResponseDto> {
     code = Sanitizer.escape(code).trim();
 
@@ -99,7 +105,9 @@ export class SubjectsController {
     type: SubjectResponseDto,
     isArray: true,
   })
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Get()
+  @Permissions(SubjectPermissionName.READ)
   findAll(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Observable<PageDto<SubjectResponseDto>> {
@@ -114,8 +122,9 @@ export class SubjectsController {
     description: 'The subject has been updated.',
     type: Number,
   })
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Patch(':code')
+  @Permissions(SubjectPermissionName.UPDATE)
   update(
     @Param('code') code: string,
     @Body() updateSubjectDto: UpdateSubjectDto,
@@ -140,8 +149,9 @@ export class SubjectsController {
     description: 'The subject has been deleted.',
     type: Number,
   })
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Delete(':code')
+  @Permissions(SubjectPermissionName.DELETE)
   remove(@Param('code') code: string): Observable<number> {
     code = Sanitizer.escape(code).trim();
 
@@ -156,8 +166,9 @@ export class SubjectsController {
     description: 'The subjects have been deleted.',
     type: Number,
   })
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Delete()
+  @Permissions(SubjectPermissionName.DELETE)
   removeAll(): Observable<number> {
     return this.subjectsService.removeAll();
   }
