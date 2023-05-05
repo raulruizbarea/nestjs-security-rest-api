@@ -27,7 +27,7 @@ RUN mkdir /home/node/university-service/logs && \
     chown node:node /home/node/university-service/logs && \
     chmod 775 /home/node/university-service/logs
 
-RUN apk add --no-cache tzdata
+RUN apk add --no-cache tzdata libssl3=3.0.8-r4 libcrypto3=3.0.8-r4
 
 ENV TZ=Europe/Madrid
 
