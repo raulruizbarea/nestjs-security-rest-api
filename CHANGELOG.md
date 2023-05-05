@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/raulruizbarea/nestjs-security-rest-api/compare/v0.0.5...v0.0.6) (2023-05-05)
+
+
+### Features
+
+* added permissions and guards ([caf178b](https://github.com/raulruizbarea/nestjs-security-rest-api/commit/caf178b5fd5b2aa1018006a78e1b565284fca17d))
+
+
+### Bug Fixes
+
+* api-gateway and university-service image vulnerabilities ([98c97c7](https://github.com/raulruizbarea/nestjs-security-rest-api/commit/98c97c786c58643d15cb653635a6cb1768ee6bea))
+
 ### [0.0.5](https://github.com/raulruizbarea/nestjs-security-rest-api/compare/v0.0.4...v0.0.5) (2023-05-05)
 
 
