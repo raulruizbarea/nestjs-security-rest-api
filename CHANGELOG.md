@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/raulruizbarea/nestjs-security-rest-api/compare/v1.0.0...v1.1.0) (2023-05-11)
+
+
+### Features
+
+* Broken Object Level Authorization review the owner can edit a subject ([b5b7048](https://github.com/raulruizbarea/nestjs-security-rest-api/commit/b5b70483b944e804301e8f334d9516909af18737))
+
 ## [1.0.0](https://github.com/raulruizbarea/nestjs-security-rest-api/compare/v0.0.6...v1.0.0) (2023-05-06)
 
 ### [0.0.6](https://github.com/raulruizbarea/nestjs-security-rest-api/compare/v0.0.5...v0.0.6) (2023-05-05)
