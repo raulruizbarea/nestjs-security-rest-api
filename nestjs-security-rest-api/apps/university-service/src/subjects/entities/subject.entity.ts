@@ -3,11 +3,13 @@ import { CreateSubjectResponseDto } from '@app/shared/subjects/dto/create-subjec
 import { CreateSubjectDto } from '@app/shared/subjects/dto/create-subject.dto';
 import { SubjectResponseDto } from '@app/shared/subjects/dto/subject-response.dto';
 import { UpdateSubjectDto } from '@app/shared/subjects/dto/update-subject.dto';
+import { UserDto } from 'apps/api-gateway/src/auth/dto/user.dto';
 import { SubjectDao } from '../infrastructure/type-orm/subject.dao';
 
 export class Subject {
   readonly createdDate: Date;
   readonly updatedDate: Date;
+  readonly createdBy: string;
 
   constructor(
     readonly academicalYear: string,
@@ -15,9 +17,11 @@ export class Subject {
     readonly lang: Languages,
     readonly name: string,
     readonly description: string,
+    createdBy?: string,
     createdDate?: Date,
     updatedDate?: Date,
   ) {
+    this.createdBy = createdBy;
     this.createdDate = createdDate;
     this.updatedDate = updatedDate;
   }
@@ -29,6 +33,7 @@ export class Subject {
       subjectDao.lang,
       subjectDao.name,
       subjectDao.description,
+      subjectDao.createdBy,
       subjectDao.createdDate,
       subjectDao.updatedDate,
     );
@@ -38,6 +43,7 @@ export class Subject {
 
   static fromDto(
     createSubjectDto: CreateSubjectDto | UpdateSubjectDto,
+    userDto?: UserDto,
   ): Subject {
     const subject = new Subject(
       createSubjectDto.academicalYear,
@@ -45,6 +51,7 @@ export class Subject {
       createSubjectDto.lang,
       createSubjectDto.name,
       createSubjectDto.description,
+      userDto?.userId,
     );
 
     return subject;
@@ -59,6 +66,7 @@ export class Subject {
     subjectResponseDto.description = subject.description;
     subjectResponseDto.createdDate = subject.createdDate;
     subjectResponseDto.updatedDate = subject.updatedDate;
+    subjectResponseDto.createdBy = subject.createdBy;
 
     return subjectResponseDto;
   }

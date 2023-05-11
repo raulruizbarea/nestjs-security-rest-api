@@ -12,4 +12,7 @@ export class SubjectResponseDto extends CreateSubjectDto {
   @IsDate()
   @IsNotEmpty()
   updatedDate: Date;
+  @ApiProperty()
+  @IsNotEmpty()
+  createdBy: string;
 }

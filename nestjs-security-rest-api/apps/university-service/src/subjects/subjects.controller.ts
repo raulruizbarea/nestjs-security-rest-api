@@ -7,6 +7,7 @@ import { SubjectResponseDto } from '@app/shared/subjects/dto/subject-response.dt
 import { UpdateSubjectDto } from '@app/shared/subjects/dto/update-subject.dto';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { UserDto } from 'apps/api-gateway/src/auth/dto/user.dto';
 import { Subject } from './entities/subject.entity';
 import { SubjectsService } from './subjects.service';
 
@@ -16,10 +17,15 @@ export class SubjectsController {
 
   @MessagePattern(SubjectMessagePatternsName.CREATE)
   async create(
-    @Payload() payload: CreateSubjectDto,
+    @Payload()
+    payload: {
+      createSubjectDto: CreateSubjectDto;
+      userDto: UserDto;
+    },
   ): Promise<CreateSubjectResponseDto> {
     const code: string = await this.subjectsService.create(
-      Subject.fromDto(payload),
+      Subject.fromDto(payload.createSubjectDto, payload.userDto),
+      payload.userDto,
     );
 
     return new CreateSubjectResponseDto(code);
@@ -51,11 +57,17 @@ export class SubjectsController {
 
   @MessagePattern(SubjectMessagePatternsName.UPDATE)
   async update(
-    @Payload() payload: { code: string; updateSubjectDto: UpdateSubjectDto },
+    @Payload()
+    payload: {
+      code: string;
+      updateSubjectDto: UpdateSubjectDto;
+      userDto: UserDto;
+    },
   ): Promise<number> {
     return await this.subjectsService.update(
       payload.code,
       Subject.fromDto(payload.updateSubjectDto),
+      payload.userDto,
     );
   }
 

@@ -9,6 +9,7 @@ import { UpdateSubjectDto } from '@app/shared/subjects/dto/update-subject.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
+import { UserDto } from '../auth/dto/user.dto';
 
 @Injectable()
 export class SubjectsService {
@@ -19,9 +20,13 @@ export class SubjectsService {
 
   create(
     createSubjectDto: CreateSubjectDto,
+    userDto: UserDto,
   ): Observable<CreateSubjectResponseDto> {
     const pattern = SubjectMessagePatternsName.CREATE;
-    const payload: CreateSubjectDto = createSubjectDto;
+    const payload = {
+      createSubjectDto,
+      userDto,
+    };
     return this.clientUniversityService.send<CreateSubjectResponseDto>(
       pattern,
       payload,
@@ -47,11 +52,16 @@ export class SubjectsService {
     );
   }
 
-  update(code: string, updateSubjectDto: UpdateSubjectDto): Observable<number> {
+  update(
+    code: string,
+    updateSubjectDto: UpdateSubjectDto,
+    userDto: UserDto,
+  ): Observable<number> {
     const pattern = SubjectMessagePatternsName.UPDATE;
     const payload = {
       code,
       updateSubjectDto,
+      userDto,
     };
 
     return this.clientUniversityService.send<number>(pattern, payload);

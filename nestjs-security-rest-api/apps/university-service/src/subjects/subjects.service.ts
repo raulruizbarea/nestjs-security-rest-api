@@ -2,6 +2,7 @@ import { PageOptionsDto } from '@app/shared/core/dto/page-options.dto';
 import { PageDto } from '@app/shared/core/dto/page.dto';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
+import { UserDto } from 'apps/api-gateway/src/auth/dto/user.dto';
 import { SubjectsRepository } from './application/subjects.repository';
 import { Subject } from './entities/subject.entity';
 
@@ -12,9 +13,9 @@ export class SubjectsService {
     private readonly subjectsRepository: SubjectsRepository,
   ) {}
 
-  async create(subject: Subject): Promise<string> {
+  async create(subject: Subject, userDto: UserDto): Promise<string> {
     try {
-      return await this.subjectsRepository.create(subject);
+      return await this.subjectsRepository.create(subject, userDto);
     } catch (error) {
       throw new RpcException({
         message: error.message,
@@ -45,9 +46,13 @@ export class SubjectsService {
     }
   }
 
-  async update(code: string, subject: Subject): Promise<number> {
+  async update(
+    code: string,
+    subject: Subject,
+    userDto: UserDto,
+  ): Promise<number> {
     try {
-      return await this.subjectsRepository.update(code, subject);
+      return await this.subjectsRepository.update(code, subject, userDto);
     } catch (error) {
       throw new RpcException({
         message: error.message,

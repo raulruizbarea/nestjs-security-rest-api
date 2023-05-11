@@ -17,6 +17,7 @@ import {
   Post,
   Query,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -35,6 +36,9 @@ import { Permissions } from '../auth/decorators/permissions.decorator';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { Tags } from '../core/constants/swagger/tags';
 import { SubjectsService } from './subjects.service';
+
+import { AuthUser } from '../auth/decorators/user.decorator';
+import { UserDto } from '../auth/dto/user.dto';
 
 @ApiTags(Tags.SUBJECTS)
 @ApiBearerAuth('access-token')
@@ -62,11 +66,13 @@ export class SubjectsController {
   @Permissions(SubjectPermissionName.CREATE)
   create(
     @Body() createSubjectDto: CreateSubjectDto,
+    @AuthUser(new ValidationPipe({ validateCustomDecorators: true }))
+    userDto: UserDto,
   ): Observable<CreateSubjectResponseDto> {
     try {
       sanitize(createSubjectDto);
 
-      return this.subjectsService.create(createSubjectDto);
+      return this.subjectsService.create(createSubjectDto, userDto);
     } catch (error) {
       throw new HttpException(
         'Internal Server Error',
@@ -128,6 +134,8 @@ export class SubjectsController {
   update(
     @Param('code') code: string,
     @Body() updateSubjectDto: UpdateSubjectDto,
+    @AuthUser(new ValidationPipe({ validateCustomDecorators: true }))
+    userDto: UserDto,
   ): Observable<number> {
     // if (Object.values(updateSubjectDto).some((value) => value === null)) {
     //   throw new HttpException(
@@ -138,7 +146,7 @@ export class SubjectsController {
     code = Sanitizer.escape(code).trim();
     sanitize(updateSubjectDto);
 
-    return this.subjectsService.update(code, updateSubjectDto);
+    return this.subjectsService.update(code, updateSubjectDto, userDto);
   }
 
   @ApiOperation({

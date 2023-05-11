@@ -30,6 +30,9 @@ export class SubjectDao extends Subject {
   @Column()
   description: string;
 
+  @Column()
+  createdBy: string;
+
   @CreateDateColumn({ type: 'timestamptz' })
   createdDate: Date;
 

@@ -5,6 +5,7 @@ import { PageDto } from '@app/shared/core/dto/page.dto';
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UserDto } from 'apps/api-gateway/src/auth/dto/user.dto';
 import { DbTableNames } from 'apps/university-service/src/core/constants/db-table-names';
 import { HttpStatusCode } from 'axios';
 import {
@@ -25,7 +26,7 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
     private readonly subjectRepository: Repository<SubjectDao>,
   ) {}
 
-  async create(subject: Subject): Promise<string> {
+  async create(subject: Subject, userDto: UserDto): Promise<string> {
     const subjectDao: SubjectDao = await this.subjectRepository.findOneBy({
       code: subject.code,
     });
@@ -40,6 +41,8 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
     const createdSubjectDao: SubjectDao = await this.subjectRepository.create(
       subject,
     );
+
+    createdSubjectDao.createdBy = userDto.userId;
 
     const insertResult: InsertResult = await this.subjectRepository
       .createQueryBuilder()
@@ -97,7 +100,11 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
     }
   }
 
-  async update(code: string, subject: Subject): Promise<number> {
+  async update(
+    code: string,
+    subject: Subject,
+    userDto: UserDto,
+  ): Promise<number> {
     const subjectDao: SubjectDao = await this.subjectRepository.findOneBy({
       code: code,
     });
@@ -106,6 +113,16 @@ export class SubjectTypeOrmRepository implements SubjectsRepository {
       throw new RpcException({
         message: APP_EXCEPTION.NOT_FOUND,
         statusCode: HttpStatusCode.NotFound,
+      });
+    }
+
+    if (
+      subjectDao.createdBy !== userDto.userId
+      //&& !userDto?.roles.some((role) => role === 'Admin')
+    ) {
+      throw new RpcException({
+        message: APP_EXCEPTION.UNAUTHORIZED,
+        statusCode: HttpStatusCode.Unauthorized,
       });
     }
 
