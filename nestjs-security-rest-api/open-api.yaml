@@ -422,6 +422,8 @@ components:
         updatedDate:
           format: date-time
           type: string
+        createdBy:
+          type: string
       required:
         - academicalYear
         - code
@@ -430,6 +432,7 @@ components:
         - description
         - createdDate
         - updatedDate
+        - createdBy
     UpdateSubjectDto:
       type: object
       properties:
