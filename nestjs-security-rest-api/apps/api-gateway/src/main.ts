@@ -9,16 +9,16 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import helmet from 'helmet';
 import { ApiGatewayModule } from './api-gateway.module';
+import { EnvironmentVariables } from './config/env.variables';
+import { nestApplicationOptions } from './nest-application-options';
 
 async function bootstrap() {
   const app = await NestFactory.create(ApiGatewayModule, {
-    bufferLogs: true,
-    httpsOptions: {
-      key: fs.readFileSync('./secrets/key.pem'),
-      cert: fs.readFileSync('./secrets/cert.pem'),
-    },
+    ...nestApplicationOptions,
   });
-  const configService = app.get(ConfigService);
+  const configService = app.get<ConfigService<EnvironmentVariables>>(
+    ConfigService<EnvironmentVariables>,
+  );
 
   app.use(helmet());
 
@@ -47,7 +47,7 @@ async function bootstrap() {
   const port = configService.get('port');
 
   Sentry.init({
-    dsn: configService.get('sentry.dsn'),
+    dsn: configService.get('sentry.dsn', { infer: true }),
     tracesSampleRate: 1.0,
     environment: configService.get('environment'),
   });

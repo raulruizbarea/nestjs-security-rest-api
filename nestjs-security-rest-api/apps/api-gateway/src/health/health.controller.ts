@@ -1,5 +1,5 @@
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Controller, Get } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   DiskHealthIndicator,
   HealthCheck,
@@ -10,10 +10,11 @@ import {
 } from '@nestjs/terminus';
 
 import { ConfigService } from '@nestjs/config';
-import { HealthService } from './health.service';
-import { Observable } from 'rxjs';
-import { Tags } from '../core/constants/swagger/tags';
 import { Transport } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
+import { EnvironmentVariables } from '../config/env.variables';
+import { Tags } from '../core/constants/swagger/tags';
+import { HealthService } from './health.service';
 
 @ApiTags(Tags.HEALTH)
 @Controller('health')
@@ -23,7 +24,7 @@ export class HealthController {
     private readonly microservice: MicroserviceHealthIndicator,
     private readonly disk: DiskHealthIndicator,
     private readonly memory: MemoryHealthIndicator,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService<EnvironmentVariables>,
     private readonly healthService: HealthService,
   ) {}
 
@@ -47,8 +48,8 @@ export class HealthController {
         this.microservice.pingCheck('university-service', {
           transport: Transport.TCP,
           options: {
-            host: this.configService.get('university.host'),
-            port: this.configService.get('university.port'),
+            host: this.configService.get('university.host', { infer: true }),
+            port: this.configService.get('university.port', { infer: true }),
           },
         }),
     ]);

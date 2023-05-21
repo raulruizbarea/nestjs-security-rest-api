@@ -5,11 +5,13 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { EnvironmentVariables } from './config/env.variables';
+import { nestApplicationOptions } from './nest-application-options';
 import { UniversityModule } from './university.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(UniversityModule, {
-    bufferLogs: true,
+    ...nestApplicationOptions,
   });
 
   app.useGlobalPipes(
@@ -22,13 +24,15 @@ async function bootstrap() {
     }),
   );
 
-  const configService = app.get(ConfigService);
+  const configService = app.get<ConfigService<EnvironmentVariables>>(
+    ConfigService<EnvironmentVariables>,
+  );
   const port = configService.get('port');
-  const universityPort = configService.get('university.port');
-  const universityHost = configService.get('university.host');
+  const universityPort = configService.get('university.port', { infer: true });
+  const universityHost = configService.get('university.host', { infer: true });
 
   Sentry.init({
-    dsn: configService.get('sentry.dsn'),
+    dsn: configService.get('sentry.dsn', { infer: true }),
     tracesSampleRate: 1.0,
     environment: configService.get('environment'),
   });

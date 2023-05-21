@@ -3,7 +3,7 @@ import 'winston-daily-rotate-file';
 import * as winston from 'winston';
 import * as ormconfig from './ormconfig';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 
 import { SharedModule } from '@app/shared';
 import winstonConfig from '@app/shared/config/winston-config';
@@ -12,8 +12,8 @@ import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WinstonModule } from 'nest-winston';
-import configuration from './config/configuration';
-import { envSchema } from './config/env.schema';
+import { EnvModule } from './config/env.module';
+import { EnvironmentVariables } from './config/env.variables';
 import { HealthModule } from './health/health.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { UniversityController } from './university.controller';
@@ -23,8 +23,11 @@ const ecsFormat = require('@elastic/ecs-winston-format');
 
 @Module({
   imports: [
+    EnvModule,
     WinstonModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: async (
+        configService: ConfigService<EnvironmentVariables>,
+      ) => ({
         ...winstonConfig,
         transports: [
           ...winstonConfig.transports,
@@ -42,19 +45,7 @@ const ecsFormat = require('@elastic/ecs-winston-format');
       }),
       inject: [ConfigService],
     }),
-    ConfigModule.forRoot({
-      load: [configuration],
-      isGlobal: true,
-      envFilePath: [
-        `apps/university-service/src/environments/.env.${process.env.NODE_ENV}`,
-      ],
-      validationSchema: envSchema,
-      validationOptions: {
-        abortEarly: true,
-        allowUnknown: false,
-        stripUnknown: true,
-      },
-    }),
+
     TypeOrmModule.forRoot({
       ...ormconfig.default.options,
       autoLoadEntities: true,

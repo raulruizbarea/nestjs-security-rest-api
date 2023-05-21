@@ -16,8 +16,8 @@ import { WinstonModule } from 'nest-winston';
 import { ApiGatewayController } from './api-gateway.controller';
 import { ApiGatewayService } from './api-gateway.service';
 import { AuthModule } from './auth/auth.module';
-import configuration from './config/configuration';
-import { envSchema } from './config/env.schema';
+import { EnvModule } from './config/env.module';
+import { EnvironmentVariables } from './config/env.variables';
 import { HttpExceptionFilter } from './core/filters/http-exception.filter';
 import { RcpExceptionFilter } from './core/filters/rpc-exception.filter';
 import { ThrottlerExceptionFilter } from './core/filters/throttler-exception.filter';
@@ -29,8 +29,11 @@ const ecsFormat = require('@elastic/ecs-winston-format');
 @Global()
 @Module({
   imports: [
+    EnvModule,
     WinstonModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: async (
+        configService: ConfigService<EnvironmentVariables>,
+      ) => ({
         ...winstonConfig,
         transports: [
           ...winstonConfig.transports,
@@ -48,29 +51,18 @@ const ecsFormat = require('@elastic/ecs-winston-format');
       }),
       inject: [ConfigService],
     }),
-    ConfigModule.forRoot({
-      load: [configuration],
-      isGlobal: true,
-      //* ignoreEnvFile: true,
-      envFilePath: [
-        `apps/api-gateway/src/environments/.env.${process.env.NODE_ENV}`,
-      ],
-      validationSchema: envSchema,
-      validationOptions: {
-        abortEarly: true,
-        allowUnknown: false,
-        stripUnknown: true,
-      },
-    }),
+
     ClientsModule.registerAsync([
       {
         name: ClientServices.UNIVERSITY_SERVICE,
         inject: [ConfigService],
-        useFactory: async (configService: ConfigService) => ({
+        useFactory: async (
+          configService: ConfigService<EnvironmentVariables>,
+        ) => ({
           transport: Transport.TCP,
           options: {
-            host: configService.get('university.host'),
-            port: configService.get('university.port'),
+            host: configService.get('university.host', { infer: true }),
+            port: configService.get('university.port', { infer: true }),
           },
         }),
       },
@@ -82,9 +74,11 @@ const ecsFormat = require('@elastic/ecs-winston-format');
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        ttl: configService.get('throttle.ttl'),
-        limit: configService.get('throttle.limit'),
+      useFactory: async (
+        configService: ConfigService<EnvironmentVariables>,
+      ) => ({
+        ttl: configService.get('throttle.ttl', { infer: true }),
+        limit: configService.get('throttle.limit', { infer: true }),
       }),
     }),
   ],
