@@ -2,7 +2,8 @@ import * as Sentry from '@sentry/node';
 
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
-import { ValidationPipe } from '@nestjs/common';
+import { NestApplicationValidationPipe } from '@app/shared/core/pipes/nest-application-validation.pipe';
+import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { EnvironmentVariables } from './config/env.variables';
@@ -10,19 +11,11 @@ import { nestApplicationOptions } from './nest-application-options';
 import { UniversityModule } from './university.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(UniversityModule, {
+  const app: INestApplication = await NestFactory.create(UniversityModule, {
     ...nestApplicationOptions,
   });
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      //* properties that don't use any validator decorator automatically removed and throw an exception
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      //* transform payload objects to dto
-      transform: true,
-    }),
-  );
+  app.useGlobalPipes(new NestApplicationValidationPipe());
 
   const configService = app.get<ConfigService<EnvironmentVariables>>(
     ConfigService<EnvironmentVariables>,

@@ -2,37 +2,28 @@ import * as Sentry from '@sentry/node';
 import * as fs from 'fs';
 import * as yaml from 'yaml';
 
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { INestApplication, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+import { NestApplicationValidationPipe } from '@app/shared/core/pipes/nest-application-validation.pipe';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import helmet from 'helmet';
 import { ApiGatewayModule } from './api-gateway.module';
 import { EnvironmentVariables } from './config/env.variables';
 import { nestApplicationOptions } from './nest-application-options';
+import { nestApplicationSecurity } from './security/nest-application-security';
 
 async function bootstrap() {
-  const app = await NestFactory.create(ApiGatewayModule, {
+  const app: INestApplication = await NestFactory.create(ApiGatewayModule, {
     ...nestApplicationOptions,
   });
   const configService = app.get<ConfigService<EnvironmentVariables>>(
     ConfigService<EnvironmentVariables>,
   );
 
-  app.use(helmet());
+  nestApplicationSecurity(app);
 
-  app.enableCors();
-
-  app.useGlobalPipes(
-    new ValidationPipe({
-      //* properties that don't use any validator decorator automatically removed and throw an exception
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      //* transform payload objects to dto
-      transform: true,
-    }),
-  );
+  app.useGlobalPipes(new NestApplicationValidationPipe());
 
   //* API:  /api/v1
   app.setGlobalPrefix('api');

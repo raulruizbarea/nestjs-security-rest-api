@@ -3,12 +3,11 @@ import 'winston-daily-rotate-file';
 import * as winston from 'winston';
 import * as ormconfig from './ormconfig';
 
-import { ConfigService } from '@nestjs/config';
-
 import { SharedModule } from '@app/shared';
 import winstonConfig from '@app/shared/config/winston-config';
 import { MicroServiceExceptionFilter } from '@app/shared/core/filters/microservice-exception.filter';
 import { Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WinstonModule } from 'nest-winston';
@@ -45,7 +44,6 @@ const ecsFormat = require('@elastic/ecs-winston-format');
       }),
       inject: [ConfigService],
     }),
-
     TypeOrmModule.forRoot({
       ...ormconfig.default.options,
       autoLoadEntities: true,

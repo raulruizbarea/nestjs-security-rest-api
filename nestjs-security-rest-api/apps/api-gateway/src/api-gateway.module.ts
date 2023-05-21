@@ -3,15 +3,14 @@ import 'winston-daily-rotate-file';
 import * as winston from 'winston';
 
 import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_FILTER, APP_GUARD } from '@nestjs/core';
+import { APP_FILTER } from '@nestjs/core';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 import { SharedModule } from '@app/shared';
 import winstonConfig from '@app/shared/config/winston-config';
 import { ClientServices } from '@app/shared/core/constants/client-services';
 import { LoggerMiddleware } from '@app/shared/core/middlewares/logger.middleware';
+import { ConfigService } from '@nestjs/config';
 import { WinstonModule } from 'nest-winston';
 import { ApiGatewayController } from './api-gateway.controller';
 import { ApiGatewayService } from './api-gateway.service';
@@ -20,9 +19,9 @@ import { EnvModule } from './config/env.module';
 import { EnvironmentVariables } from './config/env.variables';
 import { HttpExceptionFilter } from './core/filters/http-exception.filter';
 import { RcpExceptionFilter } from './core/filters/rpc-exception.filter';
-import { ThrottlerExceptionFilter } from './core/filters/throttler-exception.filter';
 import { HealthModule } from './health/health.module';
 import { SubjectsModule } from './subjects/subjects.module';
+import { ThrottlingModule } from './throttling/throttling.module';
 
 const ecsFormat = require('@elastic/ecs-winston-format');
 
@@ -51,7 +50,6 @@ const ecsFormat = require('@elastic/ecs-winston-format');
       }),
       inject: [ConfigService],
     }),
-
     ClientsModule.registerAsync([
       {
         name: ClientServices.UNIVERSITY_SERVICE,
@@ -71,16 +69,7 @@ const ecsFormat = require('@elastic/ecs-winston-format');
     AuthModule,
     HealthModule,
     SubjectsModule,
-    ThrottlerModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (
-        configService: ConfigService<EnvironmentVariables>,
-      ) => ({
-        ttl: configService.get('throttle.ttl', { infer: true }),
-        limit: configService.get('throttle.limit', { infer: true }),
-      }),
-    }),
+    ThrottlingModule,
   ],
   controllers: [ApiGatewayController],
   providers: [
@@ -92,14 +81,6 @@ const ecsFormat = require('@elastic/ecs-winston-format');
     {
       provide: APP_FILTER,
       useClass: RcpExceptionFilter,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: ThrottlerExceptionFilter,
     },
   ],
   exports: [ClientsModule],
